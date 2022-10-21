@@ -1,0 +1,17 @@
+.header {
+    position: fixed;
+    width: 100%;
+    transition: all 0.2s;
+    transform: translate3d(0, -100%, 0);
+}
+
+.el-menu {
+    align-items: center; /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
+}
+
+.visible {
+    /*transform: translate3d(0, 200%, 0);*/
+    transition: all .2s;
+    transform: translateZ(0);
+}
