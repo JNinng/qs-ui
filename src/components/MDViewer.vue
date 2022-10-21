@@ -32,9 +32,7 @@ const plugins = [
   frontmatter(),
   gemoji(),
   // highlight(),
-  highlightSsr({
-    locale: gfmLocales,
-  }),
+  highlightSsr(),
   // math(),
   mathSsr({
     locale: mathLocales,
