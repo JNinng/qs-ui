@@ -1,5 +1,7 @@
 <template>
-  <Viewer :plugins="plugins" :value="value"></Viewer>
+  <div>
+    <Viewer :plugins="plugins" :value="value"></Viewer>
+  </div>
 </template>
 
 <script>

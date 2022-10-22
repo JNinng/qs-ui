@@ -1,11 +1,13 @@
 <template>
-  <Editor
-    :locale="locales"
-    :plugins="plugins"
-    :uploadImages="uploadImage"
-    :value="value"
-    @change="handleChange"
-  />
+  <div>
+    <Editor
+      :locale="locales"
+      :plugins="plugins"
+      :uploadImages="uploadImage"
+      :value="value"
+      @change="handleChange"
+    />
+  </div>
 </template>
 
 <script>
