@@ -13,7 +13,7 @@
 import HomeMenu from "@/components/HomeMenu";
 
 export default {
-  name: "Main",
+  name: "MainX",
 
   components: {
     HomeMenu,
@@ -37,11 +37,7 @@ export default {
 
   methods: {},
 
-  computed: {},
-
   watch: {},
-
-  created() {},
 
   methods: {},
 };
