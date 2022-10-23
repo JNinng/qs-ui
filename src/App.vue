@@ -1,26 +1,19 @@
 <template>
   <div id="app">
-    <div class="menu">
-      <home-menu></home-menu>
-    </div>
-    <div class="content">
-      <router-view></router-view>
-    </div>
+    <main-x></main-x>
   </div>
 </template>
 
 <script>
-import HomeMenu from "@/components/HomeMenu";
+import MainX from "@/components/Main.vue";
 
 export default {
   name: "App",
   components: {
-    HomeMenu,
+    MainX,
   },
   data() {
-    return {
-      isVisible: true,
-    };
+    return {};
   },
   methods: {},
 };
@@ -28,15 +21,16 @@ export default {
 
 <style>
 * {
-  margin: 0;
-  padding: 0;
+	margin: 0;
+	padding: 0;
 }
 
 .menu {
-  width: 100%;
-  height: 59px;
-  margin-bottom: 16px;
-  align-items: center; /* 垂直居中 */
-  justify-content: center; /* 水平居中 */
+	width: 100%;
+	height: 59px;
+
+	align-items: center; /* 垂直居中 */
+	justify-content: center; /* 水平居中 */
 }
+
 </style>
