@@ -53,7 +53,7 @@ const plugins = [
 ];
 
 export default {
-  name: "MDEditor",
+  name: "MdEditor",
   components: {
     Editor,
   },

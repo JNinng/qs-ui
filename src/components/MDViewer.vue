@@ -1,6 +1,9 @@
 <template>
-  <div>
-    <Viewer :plugins="plugins" :value="value"></Viewer>
+  <div class="viewerRoot">
+    <div :class="[card, styleClass[abstract.mode]]">
+      {{ id }}
+      <Viewer :plugins="plugins" :value="abstract.abstract"></Viewer>
+    </div>
   </div>
 </template>
 
@@ -47,46 +50,55 @@ const plugins = [
 ];
 
 export default {
-  name: "ByteMD",
+  name: "MdViewer",
   components: {
     Viewer,
   },
+  props: ["id"],
   data() {
     return {
-      value:
-        "# qs-ui-demo\n" +
-        "\n" +
-        "## Project :+1: setup\n" +
-        "\n" +
-        "```\n" +
-        "npm install\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and hot-reloads for development\n" +
-        "\n" +
-        "```\n" +
-        "npm run serve\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and minifies for production\n" +
-        "\n" +
-        "```\n" +
-        "npm run build\n" +
-        "```\n" +
-        "\n" +
-        "### Lints and fixes files\n" +
-        "\n" +
-        "```\n" +
-        "npm run lint\n" +
-        "```\n" +
-        "\n" +
-        "### Customize configuration\n" +
-        "\n" +
-        "See [Configuration Reference](https://cli.vuejs.org/config/).",
+      // card样式，x大小类型
+      card: "card",
+      styleClass: ["x1", "x2"],
+
+      abstract: {},
       plugins,
       locales,
     };
   },
   methods: {},
+  beforeMount() {
+    this.getContent;
+  },
+  mounted() {},
+  computed: {
+    getContent() {
+      if (this.abstract.abstract == null) {
+        this.abstract = this.$store.state.abstractPage.abstracList[this.id - 1];
+      }
+      return this.abstract;
+    },
+  },
 };
 </script>
+
+<style scoped>
+.card {
+  overflow: hidden;
+
+  margin: 20px;
+  padding: 40px 20px 40px 20px;
+
+  /* height: 100%; */
+  height: 100px;
+
+  background-color: white;
+
+  box-shadow: 0 0 5.7px rgba(0, 0, 0, -0.273), 0 0 5.1px rgba(0, 0, 0, 0.056),
+    0 0 6px rgba(0, 0, 0, 1);
+}
+
+.x2 {
+  height: 280px;
+}
+</style>
