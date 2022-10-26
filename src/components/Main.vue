@@ -6,17 +6,22 @@
     <div class="content">
       <router-view></router-view>
     </div>
+    <div>
+      <home-tail></home-tail>
+    </div>
   </div>
 </template>
 
 <script>
 import HomeMenu from "@/components/HomeMenu";
+import HomeTail from "@/components/HomeTail.vue";
 
 export default {
   name: "MainX",
 
   components: {
     HomeMenu,
+    HomeTail,
   },
 
   mixins: [],
