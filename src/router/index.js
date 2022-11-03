@@ -10,10 +10,22 @@ const routes = [
 	{ path: "/", name: "home", component: Home },
 	{ path: "/editor", name: "editor", component: MdEditor },
 	{
-		path: "/viewer/:id",
+		path: "/viewer",
 		name: "viewer",
-		component: MdViewer,
-		props: true,
+		children: [
+			{
+				path: "/index/:index",
+				name: "mdIndex",
+				component: MdViewer,
+				props: true,
+			},
+			{
+				path: "/id/:id",
+				name: "mdId",
+				component: MdViewer,
+				props: true,
+			},
+		],
 	},
 	{ path: "/hello", name: "hello", component: HelloWorld },
 	{ path: "/one", name: "testOne", component: TestOne },

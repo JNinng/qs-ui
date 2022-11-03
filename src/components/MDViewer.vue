@@ -1,7 +1,6 @@
 <template>
   <div class="viewerRoot">
     <div :class="[card, styleClass[abstract.mode]]">
-      {{ id }}
       <Viewer :plugins="plugins" :value="abstract.abstract"></Viewer>
     </div>
   </div>
@@ -54,12 +53,14 @@ export default {
   components: {
     Viewer,
   },
-  props: ["id"],
+  props: ["index"],
   data() {
     return {
       // card样式，x大小类型
       card: "card",
+      cardNull: "",
       styleClass: ["x1", "x2"],
+      styleClassNull: ["", ""],
 
       abstract: {},
       plugins,
@@ -73,8 +74,18 @@ export default {
   mounted() {},
   computed: {
     getContent() {
+      console.log("test index:" + this.index);
+      console.log("test hash:" + window.location.hash);
+      if (window.location.hash == "#/index/" + this.index) {
+        console.log("test #/index/:" + this.index);
+        // this.card = this.cardNull;
+        this.styleClass = this.styleClassNull;
+      }
       if (this.abstract.abstract == null) {
-        this.abstract = this.$store.state.abstractPage.abstracList[this.id - 1];
+        this.abstract = this.$store.state.abstractPage.abstracList[this.index];
+        if (this.abstract == null) {
+          // TODO 从服务器获取指定id文章
+        }
       }
       return this.abstract;
     },
@@ -86,16 +97,16 @@ export default {
 .card {
   overflow: hidden;
 
-  margin: 20px;
-  padding: 40px 20px 40px 20px;
+  margin: 0 20px 20px 20px;
+  padding: 20px 20px 20px 20px;
 
-  /* height: 100%; */
-  height: 100px;
+  height: 100%;
 
   background-color: white;
+}
 
-  box-shadow: 0 0 5.7px rgba(0, 0, 0, -0.273), 0 0 5.1px rgba(0, 0, 0, 0.056),
-    0 0 6px rgba(0, 0, 0, 1);
+.x1 {
+  height: 120px;
 }
 
 .x2 {

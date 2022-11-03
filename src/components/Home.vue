@@ -2,7 +2,7 @@
   <div class="root" :style="styleVar">
     <div class="content" ref="content">
       <div v-for="index in abstractPage.sum" :key="index">
-        <MdListCard :id="index"></MdListCard>
+        <MdListCard :index="index - 1"></MdListCard>
       </div>
     </div>
   </div>
@@ -81,6 +81,7 @@ export default {
   left: 50%;
 
   /* margin: 0px 0 10px 0; */
+
   padding: 10px 40px 20px 40px;
   width: 64%;
 
