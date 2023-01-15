@@ -1,7 +1,7 @@
 import { createRouter, createWebHashHistory } from "vue-router";
 import HelloWorld from "@/components/demo/HelloWorld";
 import TestOne from "@/components/demo/TestOne";
-import Home from "@/components/Home";
+import Home from "@/components/home/Home";
 import MdEditor from "@/components/MdEditor";
 import MdViewer from "@/components/MdViewer";
 import ByteMD from "@/components/demo/ByteMD";
