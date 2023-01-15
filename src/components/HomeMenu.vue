@@ -1,6 +1,7 @@
 <template>
   <div v-bind:class="{ header: true, visible: isVisible }">
     <el-menu
+      default-active="1"
       active-text-color="#ffd04b"
       background-color="#545c64"
       class="el-menu-demo"

@@ -1,5 +1,9 @@
 <template>
-  <Viewer :plugins="plugins" :value="value"></Viewer>
+  <div class="viewerRoot">
+    <div :class="[card, styleClass[abstract.mode]]">
+      <Viewer :plugins="plugins" :value="abstract.abstract"></Viewer>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -45,46 +49,67 @@ const plugins = [
 ];
 
 export default {
-  name: "ByteMD",
+  name: "MdViewer",
   components: {
     Viewer,
   },
+  props: ["index"],
   data() {
     return {
-      value:
-        "# qs-ui-demo\n" +
-        "\n" +
-        "## Project :+1: setup\n" +
-        "\n" +
-        "```\n" +
-        "npm install\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and hot-reloads for development\n" +
-        "\n" +
-        "```\n" +
-        "npm run serve\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and minifies for production\n" +
-        "\n" +
-        "```\n" +
-        "npm run build\n" +
-        "```\n" +
-        "\n" +
-        "### Lints and fixes files\n" +
-        "\n" +
-        "```\n" +
-        "npm run lint\n" +
-        "```\n" +
-        "\n" +
-        "### Customize configuration\n" +
-        "\n" +
-        "See [Configuration Reference](https://cli.vuejs.org/config/).",
+      // card样式，x大小类型
+      card: "card",
+      cardNull: "",
+      styleClass: ["x1", "x2"],
+      styleClassNull: ["", ""],
+
+      abstract: {},
       plugins,
       locales,
     };
   },
   methods: {},
+  beforeMount() {
+    this.getContent;
+  },
+  mounted() {},
+  computed: {
+    getContent() {
+      console.log("test index:" + this.index);
+      console.log("test hash:" + window.location.hash);
+      if (window.location.hash == "#/index/" + this.index) {
+        console.log("test #/index/:" + this.index);
+        // this.card = this.cardNull;
+        this.styleClass = this.styleClassNull;
+      }
+      if (this.abstract.abstract == null) {
+        this.abstract = this.$store.state.abstractPage.abstracList[this.index];
+        if (this.abstract == null) {
+          // TODO 从服务器获取指定id文章
+        }
+      }
+      return this.abstract;
+    },
+  },
 };
 </script>
+
+<style scoped>
+.card {
+  overflow: hidden;
+
+  margin: 0 20px 20px 20px;
+  padding: 20px 20px 20px 20px;
+
+  height: 100%;
+
+  background-color: white;
+}
+
+.x1 {
+  height: 120px;
+}
+
+.x2 {
+  height: 280px;
+}
+</style>
