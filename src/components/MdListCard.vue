@@ -99,11 +99,15 @@ export default {
     0 0 6px rgba(0, 0, 0, 1);
 }
 
-/* .mdListCardHead {
-  position: absolute;
-  left: 50%;
-  transform: translate3d(-50%, 0, 0);
-} */
+.mdListCardHead {
+  overflow: hidden;
+}
+
+.mdListCardHead div {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .mdTitel {
   display: flex;
 

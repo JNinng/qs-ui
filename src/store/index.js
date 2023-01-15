@@ -3,7 +3,7 @@ import Vuex from "vuex";
 
 // Vue.use(Vuex);
 const abstracContext =
-	"# qs-ui-demo :+1:\n" +
+	"# qs-blog-ui :+1:\n" +
 	"\n" +
 	"## Project setup\n" +
 	"\n" +
@@ -40,7 +40,7 @@ const store = new Vuex.Store({
 			sum: 8,
 			pageSize: 4,
 			currentPage: 1,
-			abstracList: [	
+			abstracList: [
 				{
 					id: 0,
 					mode: 0,

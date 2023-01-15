@@ -66,7 +66,7 @@ export default {
   data() {
     return {
       value:
-        "# qs-ui-demo\n" +
+        "# qs-blog-ui\n" +
         "\n" +
         "## Project setup\n" +
         "\n" +
