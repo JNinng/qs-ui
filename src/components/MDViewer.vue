@@ -1,6 +1,6 @@
 <template>
   <div class="viewerRoot">
-    <div :class="[card, styleClass[index.mode]]">
+    <div :class="[card]">
       <Viewer :plugins="plugins" :value="index.content"></Viewer>
     </div>
   </div>
