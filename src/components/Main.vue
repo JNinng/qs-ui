@@ -13,8 +13,8 @@
 </template>
 
 <script>
-import HomeMenu from "@/components/HomeMenu";
-import HomeTail from "@/components/HomeTail.vue";
+import HomeMenu from "@/components/home/HomeMenu";
+import HomeTail from "@/components/home/HomeTail.vue";
 
 export default {
   name: "MainX",

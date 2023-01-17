@@ -22,9 +22,12 @@ import App from "./App.vue";
 import router from "./router";
 import Vuex from "vuex";
 import store from "./store";
+import api from "./api/index";
 
 const app = createApp(App);
 app.use(router);
 app.use(Vuex);
 app.use(store);
+app.use();
+app.config.globalProperties.$axios = api;
 app.mount("#app");
