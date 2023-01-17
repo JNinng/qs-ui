@@ -2,7 +2,7 @@
   <div class="mdListCardRoot">
     <div class="content" ref="content">
       <div class="mdListCardHead">
-        <div class="mdTitel link" @click="goto">{{ getTitel }}</div>
+        <div class="mdTitle link" @click="goto">{{ getTitle }}</div>
         <div class="mdInfo">
           <div class="mdData link">{{ getUpdateDate }}</div>
 
@@ -15,13 +15,14 @@
           <div class="hidden-xs-only">{{ getClassify }} | {{ getTag }}</div> -->
         </div>
       </div>
-      <MdViewer :index="index"></MdViewer>
+      <MdViewer :index="{ content: content, mode: mode }"></MdViewer>
       <div class="read" @click="goto">阅读全部</div>
     </div>
   </div>
 </template>
 
 <script>
+import moment from "moment";
 import MdViewer from "@/components/MdViewer";
 import "element-plus/theme-chalk/display.css";
 import "@/assets/css/link.css";
@@ -38,7 +39,14 @@ export default {
   props: ["index"],
 
   data() {
-    return {};
+    return {
+      title: "",
+      content: "",
+      mode: 0,
+      updateTime: "",
+      classify: "",
+      tags: [],
+    };
   },
 
   watch: {},
@@ -57,30 +65,45 @@ export default {
       });
     },
   },
+
+  mounted() {
+    this.$axios
+      .get("/article/preview/" + this.index, {})
+      .then((res) => {
+        //请求成功
+        this.title = res.data.title;
+        this.content = res.data.content;
+        this.mode = res.data.mode;
+        this.updateTime = moment(res.data.updateTime).format("YYYY年MM月DD日");
+        this.classify = "xxxx";
+        this.tags = ["a", "b"];
+      })
+      .catch((err) => {
+        console.log("test get err" + JSON.stringify(err));
+      });
+  },
+
   computed: {
     getIndex() {
-      return this.$store.state.abstractPage.abstracList[this.index].id;
+      // return this.$store.state.abstractPage.abstracList[this.index].id;
     },
-    getTitel() {
-      console.log("test:" + this.index);
-      this.titel = this.$store.state.abstractPage.abstracList[this.index].titel;
-      return this.titel;
+    getTitle() {
+      // this.title = this.$store.state.abstractPage.abstracList[this.index].title;
+      return this.title;
     },
     getUpdateDate() {
-      this.updateDate =
-        this.$store.state.abstractPage.abstracList[this.index].updateDate;
-      console.log("测试updaDate：" + this.updateDate);
-      return this.updateDate;
+      // this.updateDate =
+      //   this.$store.state.abstractPage.abstracList[this.index].updateDate;
+      return this.updateTime;
     },
     getClassify() {
-      this.classify =
-        this.$store.state.abstractPage.abstracList[this.index].classify;
-      console.log("测试classify：" + this.classify);
+      // this.classify =
+      //   this.$store.state.abstractPage.abstracList[this.index].classify;
       return this.classify;
     },
     getTags() {
-      this.tags = this.$store.state.abstractPage.abstracList[this.index].tag;
-      this.tags = this.tags.split(",");
+      // this.tags = this.$store.state.abstractPage.abstracList[this.index].tag;
+      // this.tags = this.tags.split(",");
       return this.tags;
     },
   },
@@ -108,7 +131,7 @@ export default {
   white-space: nowrap;
 }
 
-.mdTitel {
+.mdTitle {
   display: flex;
 
   font-size: 18px;
@@ -137,12 +160,8 @@ export default {
 .read {
   position: absolute;
 
-  /* left: -10px; */
   bottom: -4px;
   left: 50%;
-
-  /* backdrop-filter: blur(2px); */
-  /* -webkit-backdrop-filter: blur(2px); */
 
   border-radius: 10px;
   width: 26%;
