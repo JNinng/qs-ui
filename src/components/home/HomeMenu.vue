@@ -27,6 +27,7 @@
       </el-sub-menu>
       <el-menu-item disabled index="6">Info</el-menu-item>
       <el-menu-item index="7">Orders</el-menu-item>
+      <el-menu-item index="8">Return</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -93,6 +94,8 @@ export default {
           console.log(index);
           this.$router.push("/md");
           break;
+        case "8":
+          this.$router.go(-1);
       }
     },
     handleScroll: function () {
