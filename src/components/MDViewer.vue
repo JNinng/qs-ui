@@ -1,7 +1,7 @@
 <template>
   <div class="viewerRoot">
-    <div :class="[card, styleClass[abstract.mode]]">
-      <Viewer :plugins="plugins" :value="abstract.abstract"></Viewer>
+    <div :class="[card]">
+      <Viewer :plugins="plugins" :value="index.content"></Viewer>
     </div>
   </div>
 </template>
@@ -53,7 +53,7 @@ export default {
   components: {
     Viewer,
   },
-  props: ["index"],
+  props: ["index", "mode"],
   data() {
     return {
       // card样式，x大小类型
@@ -65,8 +65,10 @@ export default {
       abstract: {},
       plugins,
       locales,
+      data: {},
     };
   },
+  watch: {},
   methods: {},
   beforeMount() {
     this.getContent;
@@ -75,16 +77,26 @@ export default {
   computed: {
     getContent() {
       console.log("test index:" + this.index);
-      console.log("test hash:" + window.location.hash);
+      // console.log("test hash:" + window.location.hash);
+      // console.log("test props.index:" + this.index);
       if (window.location.hash == "#/index/" + this.index) {
         console.log("test #/index/:" + this.index);
         // this.card = this.cardNull;
         this.styleClass = this.styleClassNull;
       }
       if (this.abstract.abstract == null) {
-        this.abstract = this.$store.state.abstractPage.abstracList[this.index];
-        if (this.abstract == null) {
+        this.abstract = this.$store.state.abstractPage.abstracList[0];
+        if (this.data) {
           // TODO 从服务器获取指定id文章
+          // this.$axios
+          //   .get("/article/preview/" + this.index, {})
+          //   .then((res) => {
+          //     //请求成功
+          //     this.data = res.data;
+          //   })
+          //   .catch((err) => {
+          //     console.log("test get err" + JSON.stringify(err));
+          //   });
         }
       }
       return this.abstract;
