@@ -15,7 +15,7 @@
           <div class="hidden-xs-only">{{ getClassify }} | {{ getTag }}</div> -->
         </div>
       </div>
-      <MdViewer :index="{ content: content, mode: mode }"></MdViewer>
+      <MdViewer :content="content"></MdViewer>
       <div class="read" @click="goto">阅读全部</div>
     </div>
   </div>
@@ -58,9 +58,9 @@ export default {
   methods: {
     goto: function () {
       this.$router.push({
-        name: "mdIndex",
+        name: "mdView",
         params: {
-          index: this.index,
+          id: this.index,
         },
       });
     },

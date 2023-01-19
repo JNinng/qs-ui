@@ -5,9 +5,12 @@ import Home from "@/components/home/Home";
 import MdEditor from "@/components/MdEditor";
 import MdViewer from "@/components/MdViewer";
 import ByteMD from "@/components/demo/ByteMD";
+import Timeline from "@/components/timeline/Timeline";
+import MDView from "@/components/md/MDView";
 
 const routes = [
 	{ path: "/", name: "home", component: Home },
+	{ path: "/timeline", name: "timeline", component: Timeline },
 	{ path: "/editor", name: "editor", component: MdEditor },
 	{
 		path: "/viewer",
@@ -21,8 +24,8 @@ const routes = [
 			},
 			{
 				path: "/id/:id",
-				name: "mdId",
-				component: MdViewer,
+				name: "mdView",
+				component: MDView,
 				props: true,
 			},
 		],
