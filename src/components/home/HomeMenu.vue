@@ -10,7 +10,7 @@
       @select="handleSelect"
     >
       <el-menu-item index="1">Home</el-menu-item>
-      <el-menu-item index="2">Hello</el-menu-item>
+      <el-menu-item index="2">Timeline</el-menu-item>
       <el-menu-item index="3">Editor</el-menu-item>
       <el-menu-item index="4">Viewer</el-menu-item>
       <el-sub-menu index="5">
@@ -72,7 +72,7 @@ export default {
           break;
         case "2":
           console.log(index);
-          this.$router.push("/hello");
+          this.$router.push("/timeline");
           break;
         case "3":
           console.log(index);
@@ -82,9 +82,9 @@ export default {
           console.log(index);
           this.$router.push("/viewer");
           break;
-        case "5":
+        case "5-1":
           console.log(index);
-          this.$router.push("/two");
+          this.$router.push("/hello");
           break;
         case "6":
           console.log(index);
