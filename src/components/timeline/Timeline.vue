@@ -1,9 +1,9 @@
 <template>
   <div class="root">
     <div class="content">
-      <dir v-for="(item, index) in timeline" :key="index">
+      <div v-for="(item, index) in timeline" :key="index">
         <timeline-month :monthItem="item"></timeline-month>
-      </dir>
+      </div>
     </div>
   </div>
 </template>
@@ -57,20 +57,21 @@ export default {
 
 <style scoped>
 .root {
-  width: 100%;
+	width: 100%;
 
-  background-color: ivory;
+	background-color: ivory;
 }
 
 .content {
-  padding: 10px 4% 20px 4%;
-  width: 64%;
+	padding: 10px 4% 20px 4%;
+	width: 64%;
 
-  background-color: ivory;
+	background-color: ivory;
 
-  /* 瀑布流主框 */
-  /* box-shadow: rgba(0, 0, 0, 0.35) 0 5px 8px; */
+/* 瀑布流主框 */
+	/* box-shadow: rgba(0, 0, 0, 0.35) 0 5px 8px; */
 
-  transform: translate3d(19.44%, 0, 0);
+	transform: translate3d(19.44%, 0, 0);
 }
+
 </style>
