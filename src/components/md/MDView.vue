@@ -1,6 +1,8 @@
 <template>
-  <div>
-    <MdViewer :content="content"></MdViewer>
+  <div class="root">
+    <div class="content">
+      <MdViewer class="show" :content="content"></MdViewer>
+    </div>
   </div>
 </template>
 
@@ -37,4 +39,27 @@ export default {
 </script>
 
 <style scoped>
+.root {
+  width: 100%;
+
+  background-color: ivory;
+}
+
+.content {
+  padding: 10px 4% 20px 4%;
+  width: 64%;
+
+  background-color: ivory;
+
+  transform: translate3d(19.44%, 0, 0);
+}
+
+.show {
+  padding-top: 20px;
+
+  background-color: white;
+
+  box-shadow: 0 0 5.7px rgba(0, 0, 0, -0.273), 0 0 5.1px rgba(0, 0, 0, 0.056),
+    0 0 6px rgba(0, 0, 0, 1);
+}
 </style>
