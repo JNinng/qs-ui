@@ -11,23 +11,7 @@
     >
       <el-menu-item index="1">Home</el-menu-item>
       <el-menu-item index="2">Timeline</el-menu-item>
-      <el-menu-item index="3">Editor</el-menu-item>
-      <el-menu-item index="4">Viewer</el-menu-item>
-      <el-sub-menu index="5">
-        <template #title>Workspace</template>
-        <el-menu-item index="5-1">item one</el-menu-item>
-        <el-menu-item index="5-2">item two</el-menu-item>
-        <el-menu-item index="5-3">item three</el-menu-item>
-        <el-sub-menu index="5-4">
-          <template #title>item four</template>
-          <el-menu-item index="5-4-1">item one</el-menu-item>
-          <el-menu-item index="5-4-2">item two</el-menu-item>
-          <el-menu-item index="5-4-3">item three</el-menu-item>
-        </el-sub-menu>
-      </el-sub-menu>
-      <el-menu-item disabled index="6">Info</el-menu-item>
-      <el-menu-item index="7">Orders</el-menu-item>
-      <el-menu-item index="8">Return</el-menu-item>
+      <el-menu-item index="3">Return</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -75,27 +59,8 @@ export default {
           this.$router.push("/timeline");
           break;
         case "3":
-          console.log(index);
-          this.$router.push("/editor");
-          break;
-        case "4":
-          console.log(index);
-          this.$router.push("/viewer");
-          break;
-        case "5-1":
-          console.log(index);
-          this.$router.push("/hello");
-          break;
-        case "6":
-          console.log(index);
-          this.$router.push("/");
-          break;
-        case "7":
-          console.log(index);
-          this.$router.push("/md");
-          break;
-        case "8":
           this.$router.go(-1);
+          break;
       }
     },
     handleScroll: function () {
