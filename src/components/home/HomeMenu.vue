@@ -1,7 +1,7 @@
 <template>
   <div v-bind:class="{ header: true, visible: isVisible }">
     <el-menu
-      default-active="1"
+      :default-active="this.$route.path"
       active-text-color="#ffd04b"
       background-color="#545c64"
       class="el-menu-demo"
@@ -9,9 +9,9 @@
       text-color="#fff"
       @select="handleSelect"
     >
-      <el-menu-item index="1">Home</el-menu-item>
-      <el-menu-item index="2">Timeline</el-menu-item>
-      <el-menu-item index="3">Return</el-menu-item>
+      <el-menu-item index="/">Home</el-menu-item>
+      <el-menu-item index="/timeline">Timeline</el-menu-item>
+      <el-menu-item index="return">Return</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -38,6 +38,7 @@ export default {
     return {
       isVisible: true,
       scroll: 0,
+      default_active: 1,
     };
   },
 
@@ -50,15 +51,15 @@ export default {
   methods: {
     handleSelect: function (index) {
       switch (index) {
-        case "1":
+        case "/":
           console.log(index);
           this.$router.push("/");
           break;
-        case "2":
+        case "/timeline":
           console.log(index);
           this.$router.push("/timeline");
           break;
-        case "3":
+        case "return":
           this.$router.go(-1);
           break;
       }
@@ -73,6 +74,7 @@ export default {
     },
   },
   mounted() {
+    console.log("test:" + this.$route.path);
     window.addEventListener("scroll", this.handleScroll);
   },
   unmounted() {
