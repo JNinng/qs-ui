@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="root">
     <div v-bind:class="{ menu: true, header1: true, visible: isVisible }">
       <home-menu></home-menu>
     </div>
@@ -68,6 +68,10 @@ export default {
 * {
 	margin: 0;
 	padding: 0;
+}
+
+.root {
+	background-color: ivory;
 }
 
 .menu {

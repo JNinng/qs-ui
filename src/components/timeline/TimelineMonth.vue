@@ -17,7 +17,7 @@
         <div v-for="(item, index) in monthItem.idList" :key="index">
           <div class="item">
             <div class="date">{{ item.date }}&nbsp;</div>
-            <div class="article" @click="goto(item.id)">
+            <div class="articleTitle" @click="goto(item.id)">
               {{ item.title }}
             </div>
             <div style="clear: both"></div>
@@ -153,7 +153,7 @@ export default {
   color: gray;
 }
 
-.article {
+.articleTitle {
   margin-left: 65px;
   height: 100%;
 }
