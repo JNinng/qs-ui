@@ -2,7 +2,7 @@
   <div class="root" v-if="isShow">
     <div class="content" ref="content" v-if="isShow">
       <div v-for="(item, index) in listPage.list" :key="index">
-        <MdListCard :index="item + ''"></MdListCard>
+        <MdListCard :index="item.id + ''"></MdListCard>
       </div>
     </div>
     <div style="text-align: center"><span>继续 >>>></span></div>
