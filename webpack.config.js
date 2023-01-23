@@ -6,6 +6,7 @@ const { VueLoaderPlugin } = require("vue-loader");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const webpack = require("webpack");
 
 module.exports = {
 	// ...
@@ -17,8 +18,17 @@ module.exports = {
 	},
 	devServer: {
 		port: 8888,
-		host: "localhost",
-		open: true,
+		host: "192.168.0.105",
+		open: "http://192.168.0.105:8888",
+		proxy: {
+			"/api": {
+				target: "http://localhost:8300/",
+				changeOrigin: true,
+				pathRewrite: {
+					"^/api": "",
+				},
+			},
+		},
 	},
 	mode: "development", // 开发模式
 	entry: "./src/main.js", // 入口文件
@@ -39,7 +49,15 @@ module.exports = {
 				],
 			},
 			{
-				test: /\.(png|svg|jpg|jpeg|gif|ico)$/,
+				test: /\.svg$/,
+				loader: "svg-sprite-loader",
+				include: [path.join(__dirname, "/src/assets/svg")],
+				options: {
+					symbolId: "icon-[name]",
+				},
+			},
+			{
+				test: /\.(png|jpg|jpeg|gif|ico)$/,
 				exclude: /node_modules/,
 				use: [
 					{
@@ -80,6 +98,10 @@ module.exports = {
 		new MiniCssExtractPlugin({
 			filename: "./static/css/[name].css",
 			chunkFilename: "./static/css/[name][id].css",
+		}),
+		new webpack.DefinePlugin({
+			__VUE_OPTIONS_API__: true,
+			__VUE_PROD_DEVTOOLS__: true,
 		}),
 	],
 };

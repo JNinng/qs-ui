@@ -1,5 +1,9 @@
 <template>
-  <Viewer :plugins="plugins" :value="value"></Viewer>
+  <div class="viewerRoot">
+    <div :class="[card]">
+      <Viewer :plugins="plugins" :value="content"></Viewer>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -32,9 +36,7 @@ const plugins = [
   frontmatter(),
   gemoji(),
   // highlight(),
-  highlightSsr({
-    locale: gfmLocales,
-  }),
+  highlightSsr(),
   // math(),
   mathSsr({
     locale: mathLocales,
@@ -47,46 +49,40 @@ const plugins = [
 ];
 
 export default {
-  name: "ByteMD",
+  name: "MdViewer",
   components: {
     Viewer,
   },
+  props: ["content"],
   data() {
     return {
-      value:
-        "# qs-ui-demo\n" +
-        "\n" +
-        "## Project :+1: setup\n" +
-        "\n" +
-        "```\n" +
-        "npm install\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and hot-reloads for development\n" +
-        "\n" +
-        "```\n" +
-        "npm run serve\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and minifies for production\n" +
-        "\n" +
-        "```\n" +
-        "npm run build\n" +
-        "```\n" +
-        "\n" +
-        "### Lints and fixes files\n" +
-        "\n" +
-        "```\n" +
-        "npm run lint\n" +
-        "```\n" +
-        "\n" +
-        "### Customize configuration\n" +
-        "\n" +
-        "See [Configuration Reference](https://cli.vuejs.org/config/).",
+      // card样式，x大小类型
+      card: "card",
+
       plugins,
       locales,
     };
   },
-  methods: {},
 };
 </script>
+
+<style scoped>
+.card {
+  overflow: hidden;
+
+  margin: 0 20px 20px 20px;
+  padding: 20px 20px 20px 20px;
+
+  height: 100%;
+
+  background-color: white;
+}
+
+.x1 {
+  height: 120px;
+}
+
+.x2 {
+  height: 280px;
+}
+</style>

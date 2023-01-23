@@ -1,0 +1,7 @@
+.link:hover {
+	font-size: 18px;
+
+	color: rgb(117, 204, 238);
+
+	transition: all .4s;
+}

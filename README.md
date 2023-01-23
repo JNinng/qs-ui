@@ -1,4 +1,4 @@
-# qs-ui-demo
+# qs-blog-ui
 
 ## Project setup
 ```

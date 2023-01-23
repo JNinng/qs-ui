@@ -1,11 +1,13 @@
 <template>
-  <Editor
-    :locale="locales"
-    :plugins="plugins"
-    :uploadImages="uploadImage"
-    :value="value"
-    @change="handleChange"
-  />
+  <div>
+    <Editor
+      :locale="locales"
+      :plugins="plugins"
+      :uploadImages="uploadImage"
+      :value="value"
+      @change="handleChange"
+    />
+  </div>
 </template>
 
 <script>
@@ -38,9 +40,7 @@ const plugins = [
   frontmatter(),
   gemoji(),
   // highlight(),
-  highlightSsr({
-    locale: gfmLocales,
-  }),
+  highlightSsr(),
   // math(),
   mathSsr({
     locale: mathLocales,
@@ -53,14 +53,14 @@ const plugins = [
 ];
 
 export default {
-  name: "MDEditor",
+  name: "MdEditor",
   components: {
     Editor,
   },
   data() {
     return {
       value:
-        "# qs-ui-demo\n" +
+        "# qs-blog-ui\n" +
         "\n" +
         "## Project setup\n" +
         "\n" +
