@@ -7,10 +7,12 @@ import MdViewer from "@/components/MdViewer";
 import ByteMD from "@/components/demo/ByteMD";
 import Timeline from "@/components/timeline/Timeline";
 import MDView from "@/components/md/MDView";
+import About from "@/components/about/About";
 
 const routes = [
 	{ path: "/", name: "home", component: Home },
 	{ path: "/timeline", name: "timeline", component: Timeline },
+	{ path: "/about", name: "about", component: About },
 	{ path: "/editor", name: "editor", component: MdEditor },
 	{
 		path: "/viewer",
