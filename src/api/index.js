@@ -4,6 +4,7 @@ import qs from "qs";
 axios.defaults.baseURL = "/api";
 
 export default {
+	serverAddress: "http://192.168.0.105:8300",
 	/**
 	 * @param {String} url
 	 * @param {Object} data
