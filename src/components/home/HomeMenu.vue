@@ -11,6 +11,7 @@
     >
       <el-menu-item index="/">Home</el-menu-item>
       <el-menu-item index="/timeline">Timeline</el-menu-item>
+      <el-menu-item index="/tag">Tag</el-menu-item>
       <el-menu-item index="return">Return</el-menu-item>
     </el-menu>
   </div>
@@ -58,6 +59,9 @@ export default {
         case "/timeline":
           console.log(index);
           this.$router.push("/timeline");
+          break;
+        case "/tag":
+          this.$router.push("/tag");
           break;
         case "return":
           this.$router.go(-1);
