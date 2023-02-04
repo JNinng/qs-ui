@@ -5,7 +5,7 @@
         <MdListCard :index="item.id + ''"></MdListCard>
       </div>
     </div>
-    <div style="text-align: center"><span>继续 >>>></span></div>
+    <div style="text-align: center"><el-button round>继续</el-button></div>
   </div>
 </template>
 

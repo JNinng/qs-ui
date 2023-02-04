@@ -35,18 +35,21 @@
             <div style="clear: both"></div>
           </div>
         </div>
+        <comment></comment>
       </div>
     </div>
+    <div style="text-align: center"><el-button round>继续</el-button></div>
   </div>
 </template>
 
 <script>
 import { ref } from "vue";
+import Comment from "@/components/comment/Comment";
 
 export default {
   name: "Tag",
 
-  components: {},
+  components: { Comment },
 
   mixins: [],
 
@@ -159,7 +162,7 @@ export default {
   width: 100%;
   min-width: 240px;
 
-  background-color: ivory;
+  /* background-color: ivory; */
 }
 
 .content {
