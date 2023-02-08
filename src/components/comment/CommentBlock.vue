@@ -33,6 +33,7 @@
           <!-- <span>{{ commentContent.length > 500 ? "评论过长！" : "" }}</span> -->
           <!-- <div>{{ commentContent.length }} 字</div> -->
           <div style="text-align: right; margin-top: 4px">
+            {{ message }}
             <el-button type="primary" @click="submit">提交</el-button>
           </div>
         </div>
@@ -57,6 +58,7 @@ export default {
       email: "",
       commentContent: "",
       minRows: 1,
+      message: "",
     };
   },
 
@@ -69,7 +71,21 @@ export default {
   watch: {},
 
   methods: {
-    submit: function () {},
+    submit: function () {
+      if (this.commentContent.length > 0) {
+        this.$axios
+          .post("/comment/comment", {
+            name: this.nickname,
+            email: this.email,
+            content: this.commentContent,
+            parentId: this.commentId,
+            articleId: this.articleId,
+          })
+          .then((res) => {
+            this.message = res.message;
+          });
+      }
+    },
   },
 };
 </script>

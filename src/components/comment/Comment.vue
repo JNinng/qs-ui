@@ -30,7 +30,10 @@
           ></el-input>
         </div>
       </div> -->
-      <comment-block></comment-block>
+      <comment-block
+        :commentId="commentId"
+        :articleId="articleId"
+      ></comment-block>
     </div>
   </div>
 </template>
@@ -47,7 +50,7 @@ export default {
 
   mixins: [],
 
-  props: [],
+  props: ["commentId", "articleId"],
 
   data() {
     return {
