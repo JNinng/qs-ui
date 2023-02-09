@@ -126,6 +126,9 @@ const store = new Vuex.Store({
 		listPage: {
 			list: [],
 		},
+		timeline: {
+			currentDate: "",
+		},
 	},
 });
 

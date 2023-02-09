@@ -23,6 +23,7 @@ import router from "./router";
 import { createStore } from "vuex";
 import store from "./store";
 import api from "./api/index";
+import moment from "moment";
 
 const app = createApp(App);
 app.use(router);
@@ -30,3 +31,4 @@ app.use(createStore);
 app.use(store);
 app.config.globalProperties.$axios = api;
 app.mount("#app");
+store.state.timeline.currentDate = moment().format("YYYY-MM-DD");
