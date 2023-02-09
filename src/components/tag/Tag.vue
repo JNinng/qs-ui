@@ -37,6 +37,7 @@
         </div>
       </div>
     </div>
+    <div style="text-align: center"><el-button round>继续</el-button></div>
   </div>
 </template>
 
@@ -159,7 +160,7 @@ export default {
   width: 100%;
   min-width: 240px;
 
-  background-color: ivory;
+  /* background-color: ivory; */
 }
 
 .content {

@@ -5,9 +5,12 @@
         <span class="dateHeader">{{ monthItem.date }}&nbsp;</span>
         <span class="sum">{{ monthItem.idList.length }}篇</span>
         <!-- <svg-icon icon-class="add"></svg-icon> -->
-        <svg class="svgIcon" aria-hidden="true">
+        <!-- <svg class="svgIcon" aria-hidden="true">
           <use :xlink:href="`#icon-add`" @click="visible"></use>
-        </svg>
+        </svg> -->
+        <el-button class="more" circle size="small" @click="visible"
+          >></el-button
+        >
       </div>
       <div
         :class="{ list: true, visible: isVisible }"
@@ -30,7 +33,7 @@
 </template>
 
 <script>
-import "@/assets/svg/add.svg";
+// import "@/assets/svg/add.svg";
 // import SvgIcon from "@/components/svgIcon";
 
 export default {
@@ -83,6 +86,7 @@ export default {
 
 <style scoped>
 .root {
+  margin: 0 0 8px 0;
   width: 100%;
 
   background-color: ivory;
@@ -164,11 +168,19 @@ export default {
   max-height: var(--listHeight);
 
   /* transition-timing-function: cubic-bezier(0.32, 0.13, 0.5, 0.9); */
+
   transition-duration: 0.3s;
+
   /* transition-property: all; */
 }
 
 .visible {
   max-height: 0;
+}
+
+.more {
+  margin-left: 4px;
+
+  transform: translateY(-1px);
 }
 </style>
