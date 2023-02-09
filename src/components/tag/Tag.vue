@@ -37,7 +37,11 @@
         </div>
       </div>
     </div>
-    <div style="text-align: center"><el-button round>继续</el-button></div>
+    <div style="text-align: center">
+      <el-button round @click="postArticle(tagList[activeIndex].name, true)"
+        >继续</el-button
+      >
+    </div>
   </div>
 </template>
 
@@ -62,6 +66,8 @@ export default {
       zeroTagContent: ">>",
       tagList: [],
       tagArticleList: [],
+      page: 1,
+      pageSize: 4,
     };
   },
 
@@ -71,7 +77,7 @@ export default {
       .then((res) => {
         this.tagList = res.data;
         this.zero = this.tagList[this.tagList.length - 1].sum == 0;
-        this.postArticle(this.tagList[0].name);
+        this.postArticle(this.tagList[0].name, false);
         this.load = true;
       })
       .catch((err) => {
@@ -105,14 +111,15 @@ export default {
       this.checked.value = stauts;
     },
     toTag(tag, index) {
+      this.page = 1;
       this.activeIndex = index;
-      this.postArticle(tag.name);
+      this.postArticle(tag.name, false);
     },
     onZero() {
       this.zero = !this.zero;
       this.zeroTagContent = this.zero ? ">>" : "<<";
     },
-    goto: function (id) {
+    goto(id) {
       this.$router.push({
         name: "mdView",
         params: {
@@ -120,11 +127,16 @@ export default {
         },
       });
     },
-    postArticle(tagName) {
+    // mode: false 首次加载
+    postArticle(tagName, mode) {
+      console.log("test post:" + JSON.stringify(tagName) + " " + mode);
+      if (mode) {
+        this.page += 1;
+      }
       this.$axios
         .post("/tag/getIdListPageByName", {
           name: tagName,
-          page: 1,
+          page: mode ? this.page : 1,
           pageSize: 4,
         })
         .then((res) => {
@@ -139,9 +151,15 @@ export default {
           });
           if (flag) {
             if (this.tagArticleList[tIndex].data.page < data.page) {
-              this.tagArticleList[tIndex].data.list.push(data.list);
-              this.tagArticleList[tIndex].data.page = data.page;
-              this.tagArticleList[tIndex].data.pageSize = data.pageSize;
+              if (data.list.length > 0) {
+                this.tagArticleList[tIndex].data.list = this.tagArticleList[
+                  tIndex
+                ].data.list.concat(data.list);
+                this.tagArticleList[tIndex].data.page = data.page;
+                this.tagArticleList[tIndex].data.pageSize = data.pageSize;
+              } else {
+                this.page -= 1;
+              }
             }
           } else {
             this.tagArticleList.push({ name: tagName, data: data });
@@ -149,6 +167,9 @@ export default {
         })
         .catch((err) => {
           console.log("test post err:" + err);
+          if (mode) {
+            this.page -= 1;
+          }
         });
     },
   },
@@ -237,6 +258,7 @@ export default {
 .articleTitle {
   margin-left: 140px;
   height: 100%;
+  overflow: hidden;
 }
 
 .date {
