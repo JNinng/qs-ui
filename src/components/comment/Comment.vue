@@ -33,6 +33,8 @@
       <comment-block
         :commentId="commentId"
         :articleId="articleId"
+        @submitSuccess="submitSuccess"
+        @cancel="cancel"
       ></comment-block>
     </div>
   </div>
@@ -50,12 +52,17 @@ export default {
 
   mixins: [],
 
-  props: ["commentId", "articleId"],
+  props: {
+    commentId: {
+      type: String,
+    },
+    articleId: {
+      type: String,
+    },
+  },
 
   data() {
     return {
-      nickname: "",
-      email: "",
       commentContent: "",
     };
   },
@@ -68,7 +75,23 @@ export default {
 
   watch: {},
 
-  methods: {},
+  beforeMount() {
+    if (this.tNickname) {
+      this.nickname = this.tNickname;
+    }
+    if (this.tEmai) {
+      this.email = this.tEmai;
+    }
+  },
+
+  methods: {
+    submitSuccess() {
+      this.$emit("submitSuccess");
+    },
+    cancel() {
+      this.$emit("cancel");
+    },
+  },
 };
 </script>
 

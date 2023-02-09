@@ -6,7 +6,7 @@
           <div class="commentHeaderItem">
             <el-input
               class="input"
-              v-model="nickname"
+              v-model="this.$store.state.nickname"
               placeholder="昵称"
               clearable
             ></el-input>
@@ -14,7 +14,7 @@
           <div class="commentHeaderItem">
             <el-input
               class="input"
-              v-model="email"
+              v-model="this.$store.state.email"
               placeholder="邮箱"
               clearable
             ></el-input>
@@ -34,6 +34,7 @@
           <!-- <div>{{ commentContent.length }} 字</div> -->
           <div style="text-align: right; margin-top: 4px">
             {{ message }}
+            <el-button type="info" @click="cancel">取消</el-button>
             <el-button type="primary" @click="submit">提交</el-button>
           </div>
         </div>
@@ -50,12 +51,17 @@ export default {
 
   mixins: [],
 
-  props: ["commentId", "articleId"],
+  props: {
+    commentId: {
+      type: String,
+    },
+    articleId: {
+      type: String,
+    },
+  },
 
   data() {
     return {
-      nickname: "",
-      email: "",
       commentContent: "",
       minRows: 1,
       message: "",
@@ -75,16 +81,20 @@ export default {
       if (this.commentContent.length > 0) {
         this.$axios
           .post("/comment/comment", {
-            name: this.nickname,
-            email: this.email,
+            name: this.$store.state.nickname,
+            email: this.$store.state.email,
             content: this.commentContent,
             parentId: this.commentId,
             articleId: this.articleId,
           })
           .then((res) => {
             this.message = res.message;
+            this.$emit("submitSuccess");
           });
       }
+    },
+    cancel: function () {
+      this.$emit("cancel");
     },
   },
 };
