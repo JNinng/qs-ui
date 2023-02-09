@@ -35,7 +35,6 @@
             <div style="clear: both"></div>
           </div>
         </div>
-        <comment commentId="z14VdKwdjEGo" articleId="GP1OaN9yYlE2"></comment>
       </div>
     </div>
     <div style="text-align: center"><el-button round>继续</el-button></div>
@@ -44,12 +43,11 @@
 
 <script>
 import { ref } from "vue";
-import Comment from "@/components/comment/Comment";
 
 export default {
   name: "Tag",
 
-  components: { Comment },
+  components: {},
 
   mixins: [],
 
