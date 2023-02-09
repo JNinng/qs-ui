@@ -22,7 +22,7 @@
         >
           {{ zeroTagContent }}
         </el-tag>
-        <div class="items" :v-if="load">
+        <div class="items" v-if="articleLoad">
           <div
             class="item"
             v-for="(item, index) in getNowTagArticleList"
@@ -59,7 +59,8 @@ export default {
 
   data() {
     return {
-      load: false,
+      tagLoad: false,
+      articleLoad: false,
       checked: ref(false),
       activeIndex: 0,
       zero: false,
@@ -78,7 +79,7 @@ export default {
         this.tagList = res.data;
         this.zero = this.tagList[this.tagList.length - 1].sum == 0;
         this.postArticle(this.tagList[0].name, false);
-        this.load = true;
+        this.tagLoad = true;
       })
       .catch((err) => {
         console.log("test post tag all:" + err);
@@ -89,7 +90,7 @@ export default {
 
   computed: {
     getNowTagArticleList() {
-      if (this.load) {
+      if (this.tagLoad) {
         const tagName = this.tagList[this.activeIndex].name;
         let tIndex;
         this.tagArticleList.forEach((item, index) => {
@@ -163,6 +164,7 @@ export default {
             }
           } else {
             this.tagArticleList.push({ name: tagName, data: data });
+            this.articleLoad = true;
           }
         })
         .catch((err) => {
