@@ -5,7 +5,9 @@
         <MdListCard :index="item.id + ''"></MdListCard>
       </div>
     </div>
-    <div style="text-align: center"><el-button round>继续</el-button></div>
+    <div style="text-align: center">
+      <el-button round @click="loadNextPage">继续</el-button>
+    </div>
   </div>
 </template>
 
@@ -32,17 +34,12 @@ export default {
     return {
       isShow: false,
       listPage: {},
-      abstractPage: {
-        sum: 0,
-        pageSize: 0,
-        currentPage: 0,
-      },
     };
   },
 
   computed: {
     getLoad() {
-      return this.$store.state.load;
+      return this.$store.state.home.load;
     },
     getListPage() {
       return this.listPage.list;
@@ -53,11 +50,11 @@ export default {
   },
 
   watch: {
-    "$store.state.listPage.list": {
+    "$store.state.home.listPage.list": {
       handler(newValue, oldValue) {
         this.isShow = false;
         this.$nextTick(() => {
-          this.listPage.list = this.$store.state.listPage.list;
+          this.listPage.list = this.$store.state.home.listPage.list;
           this.isShow = true;
         });
       },
@@ -66,25 +63,27 @@ export default {
 
   created() {},
 
-  methods: {},
+  methods: {
+    more() {},
+    loadNextPage() {
+      this.$store.state.home.currentPage += 1;
+      this.$axios
+        .post("/article/getIdListPage", {
+          page: this.$store.state.home.currentPage,
+          pageSize: this.$store.state.home.pageSize,
+        })
+        .then((res) => {
+          this.$store.state.home.listPage = {
+            list: this.$store.state.home.listPage.list.concat(res.data.list),
+          };
+        });
+    },
+  },
 
   mounted() {},
 
   beforeMount() {
-    this.abstractPage.sum = this.$store.state.abstractPage.sum;
-    this.abstractPage.pageSize = this.$store.state.abstractPage.pageSize;
-    this.abstractPage.currentPage = this.$store.state.abstractPage.currentPage;
-    // this.listPage = this.$store.state.listPage;
-    this.$axios
-      .post("/article/getIdListPage", {
-        page: 1,
-        pageSize: 4,
-      })
-      .then((res) => {
-        this.$store.state.listPage = {
-          list: this.$store.state.listPage.list.concat(res.data.list),
-        };
-      });
+    this.loadNextPage();
   },
 
   computed: {
