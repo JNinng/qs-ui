@@ -46,6 +46,9 @@ const store = new Vuex.Store({
 		timeline: {
 			currentDate: "",
 		},
+		config: {
+			adminShow: false,
+		},
 	},
 });
 
