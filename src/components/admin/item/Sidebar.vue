@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-col class="sidebar-container" :style="`width:${open ? '210' : '0'}px;`">
+    <el-col class="sidebar-container" :style="`width:${open ? '210' : '0'}px`">
       <el-scrollbar wrap-class="scrollbar-wrapper">
         <el-menu default-active="/articleManagement" @select="handleSelect">
           <el-sub-menu index="1">
@@ -8,6 +8,7 @@
               <span>数据</span>
             </template>
             <el-menu-item index="/articleManagement">文章</el-menu-item>
+            <el-menu-item index="/articleList">文章</el-menu-item>
             <el-menu-item index="/commentManagement">评论</el-menu-item>
             <!-- 菜单进行分组 -->
             <el-menu-item-group title="文件数据" class="default-menu">

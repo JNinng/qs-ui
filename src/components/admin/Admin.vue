@@ -5,11 +5,11 @@
       <el-container>
         <!-- 侧边栏 -->
         <el-aside :width="open ? '210px' : '0px'">
-          <sidebar :open="open" />
+          <Sidebar :open="open" />
         </el-aside>
         <el-container>
           <!-- 顶部 -->
-          <el-header height="50px">
+          <el-header style="height: auto">
             <el-col
               ><span class="sidebar-switch" @click="open = !open">
                 <!-- <i :class="open ? 'el-icon-s-fold' : 'el-icon-s-unfold'" /> -->
@@ -24,11 +24,37 @@
                   /></el-icon>
                 </span>
               </span>
-              <span>header</span></el-col
-            ></el-header
-          >
+              <span>
+                <Header class="adminHeader" />
+              </span>
+            </el-col>
+          </el-header>
           <!-- 主页面 -->
           <el-main><router-view></router-view></el-main>
+          <div class="dialog">
+            <el-dialog
+              v-model="this.$store.state.config.noLogin"
+              title="请登录管理员账号"
+              :show-close="false"
+              :before-close="handleClose"
+              align-center
+            >
+              <el-form :model="user">
+                <el-form-item label="用户名" label-width="140px">
+                  <el-input v-model="user.name" autocomplete="off" />
+                </el-form-item>
+                <el-form-item label="密码" label-width="140px">
+                  <el-input v-model="user.password" autocomplete="off" />
+                </el-form-item>
+              </el-form>
+              <template #footer>
+                <span class="dialog-footer">
+                  <el-button @click="handleClose">返回 Home</el-button>
+                  <el-button type="primary" @click="login"> 登录 </el-button>
+                </span>
+              </template>
+            </el-dialog>
+          </div>
         </el-container>
       </el-container>
     </el-row>
@@ -37,12 +63,14 @@
 
 <script>
 import Sidebar from "@/components/admin/item/Sidebar";
+import Header from "@/components/admin/item/Header";
 
 export default {
   name: "Admin",
 
   components: {
     Sidebar,
+    Header,
   },
 
   mixins: [],
@@ -52,6 +80,14 @@ export default {
   data() {
     return {
       open: true,
+      user: {
+        name: "",
+        password: "",
+      },
+      form: {
+        name: "",
+        region: {},
+      },
     };
   },
 
@@ -63,7 +99,34 @@ export default {
 
   watch: {},
 
-  methods: {},
+  methods: {
+    handleClose() {
+      console.log("test to home");
+      this.$store.state.config.login = false;
+      this.$store.state.config.noLogin = true;
+      this.$store.state.config.adminShow = false;
+      this.$router.push("/");
+    },
+    login() {
+      this.$axios
+        .post("/user/login", {
+          name: "restfulToolkitX",
+          password: "restfulToolkitX",
+        })
+        .then((res) => {
+          const token = res.data.token;
+          const id = res.data.id;
+          console.log("test 1 login:" + res);
+          localStorage.setItem("token", "token");
+          localStorage.setItem("tokenValue", token);
+          localStorage.setItem("id", res.data.id);
+          this.$store.state.config.id = id;
+          this.$store.state.config.token = token;
+          this.$store.state.config.login = true;
+          this.$store.state.config.noLogin = false;
+        });
+    },
+  },
 };
 </script>
 
@@ -72,5 +135,9 @@ export default {
   position: relative;
   height: 100%;
   width: 100%;
+}
+
+.adminHeader {
+  float: right;
 }
 </style>
