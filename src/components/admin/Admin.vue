@@ -37,13 +37,14 @@
               title="请登录管理员账号"
               :show-close="false"
               :before-close="handleClose"
+              width="440px"
               align-center
             >
               <el-form :model="user">
-                <el-form-item label="用户名" label-width="140px">
+                <el-form-item label="用户名" label-width="60px">
                   <el-input v-model="user.name" autocomplete="off" />
                 </el-form-item>
-                <el-form-item label="密码" label-width="140px">
+                <el-form-item label="密码" label-width="60px">
                   <el-input v-model="user.password" autocomplete="off" />
                 </el-form-item>
               </el-form>
@@ -81,12 +82,8 @@ export default {
     return {
       open: true,
       user: {
-        name: "",
-        password: "",
-      },
-      form: {
-        name: "",
-        region: {},
+        name: "restfulToolkitX",
+        password: "restfulToolkitX",
       },
     };
   },
@@ -110,8 +107,8 @@ export default {
     login() {
       this.$axios
         .post("/user/login", {
-          name: "restfulToolkitX",
-          password: "restfulToolkitX",
+          name: this.user.name,
+          password: this.user.password,
         })
         .then((res) => {
           const token = res.data.token;
