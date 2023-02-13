@@ -8,7 +8,7 @@
               <span>数据</span>
             </template>
             <el-menu-item index="/articleManagement">文章</el-menu-item>
-            <el-menu-item index="/articleList">文章</el-menu-item>
+            <el-menu-item index="/commentManagement">评论</el-menu-item>
             <el-menu-item index="/commentManagement">评论</el-menu-item>
             <!-- 菜单进行分组 -->
             <el-menu-item-group title="文件数据" class="default-menu">
@@ -71,8 +71,10 @@ export default {
       console.log(index);
       switch (index) {
         case "/articleManagement":
-          console.log("test 11");
           this.$router.push("/articleManagement");
+          break;
+        case "/commentManagement":
+          this.$router.push("/commentManagement");
           break;
       }
     },

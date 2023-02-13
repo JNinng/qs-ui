@@ -11,6 +11,7 @@ import Tag from "@/components/tag/Tag";
 import About from "@/components/about/About";
 import Admin from "@/components/admin/Admin";
 import ArticleManagement from "@/components/admin/item/ArticleManagement";
+import CommentManagement from "@/components/admin/item/CommentManagement";
 
 const routes = [
 	{ path: "/", name: "home", component: Home },
@@ -28,6 +29,22 @@ const routes = [
 				path: "/articleManagement",
 				name: "articleManagement",
 				component: ArticleManagement,
+				props: true,
+				children: [
+					{
+						path: "/",
+						name: "adminEditor",
+						component: MdEditor,
+						props: (route) => ({
+							id: route.query.id,
+						}),
+					},
+				],
+			},
+			{
+				path: "/commentManagement",
+				name: "commentManagement",
+				component: CommentManagement,
 				props: true,
 				children: [
 					{
