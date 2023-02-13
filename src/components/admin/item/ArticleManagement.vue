@@ -1,5 +1,23 @@
 <template>
   <div>
+    <el-dialog
+      v-model="dialogFormVisible"
+      :title="operationRow.title"
+      fullscreen="true"
+      destroy-on-close="true"
+    >
+      <div>
+        <router-view></router-view>
+      </div>
+      <template #footer>
+        <div style="clear: both"></div>
+        <span class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">返回管理</el-button>
+        </span>
+      </template>
+    </el-dialog>
+
+    <!--  -->
     <el-table
       :data="tableData"
       :default-sort="{ prop: 'date', order: 'descending' }"
@@ -7,8 +25,6 @@
       border
       style="width: 100%"
       max-height="80vh"
-      @cell-mouse-enter="handleCellEnter"
-      @cell-mouse-leave="handleCellLeave"
       :v-if="pageListLoad"
     >
       <el-table-column prop="id" label="ID" sortable width="110" />
@@ -131,7 +147,7 @@
               type="primary"
               size="small"
               icon="View"
-              @click="handleDetailClick(scope.row)"
+              @click="goto(scope.row)"
             ></el-button>
           </el-tooltip>
           <el-tooltip content="编辑" placement="top">
@@ -150,20 +166,20 @@
               type="success"
               size="small"
               icon="Select"
-              @click="scope.row.edit = false"
+              @click="save(scope.row)"
             >
             </el-button>
           </el-tooltip>
-          <el-tooltip content="取消" placement="top">
-            <el-button
-              v-show="scope.row.edit"
-              type="info"
-              size="small"
-              icon="CloseBold"
-              @click="scope.row.edit = false"
-            >
-            </el-button>
-          </el-tooltip>
+          <!-- <el-tooltip content="取消" placement="top"> -->
+          <el-button
+            v-show="scope.row.edit"
+            type="info"
+            size="small"
+            icon="CloseBold"
+            @click="cancel(scope.row)"
+          >
+          </el-button>
+          <!-- </el-tooltip> -->
         </template>
       </el-table-column>
     </el-table>
@@ -181,63 +197,6 @@
         @current-change="handleCurrentChange"
       />
     </div>
-    <!-- <el-button type="text" @click="dialogVisible = true"
-      >点击打开 Dialog</el-button
-    >
-
-    <el-dialog
-      title="提示"
-      :model-value="dialogVisible"
-      width="30%"
-      :before-close="handleClose"
-    >
-      <div>{{ operationRow }}</div>
-      <span class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false"
-          >确 定</el-button
-        >
-      </span>
-    </el-dialog> -->
-
-    <!-- <el-table :data="list1">
-      <el-table-column align="center" prop="id" label="编号" width="80">
-        <template #default="scope">
-          <span v-show="!scope.row.edit">{{ scope.row.id }}</span>
-          <el-input v-show="scope.row.edit" v-model="scope.row.id"></el-input>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="180px" prop="name" label="名称">
-        <template #default="scope">
-          <span v-show="!scope.row.edit">{{ scope.row.name }}</span>
-          <el-input v-show="scope.row.edit" v-model="scope.row.name"></el-input>
-        </template>
-      </el-table-column>
-
-      <el-table-column align="center" label="操作" width="300">
-        <template #default="scope">
-          <el-button
-            v-show="!scope.row.edit"
-            type="primary"
-            size="small"
-            icon="Edit"
-            @click="scope.row.edit = !scope.row.edit"
-          >
-            编辑
-          </el-button>
-          <el-button
-            v-show="scope.row.edit"
-            type="success"
-            size="small"
-            icon="Select"
-            @click="scope.row.edit = false"
-          >
-            Ok
-          </el-button>
-        </template>
-      </el-table-column>
-    </el-table> -->
   </div>
 </template>
 
@@ -270,10 +229,7 @@ export default {
       pageListLoad: false,
       dialogVisible: false,
       operationRow: {},
-      list1: [
-        { id: "1", name: "法外狂徒", editid: false, editname: false },
-        { id: "2", name: "张三", editid: false, editname: false },
-      ],
+      dialogFormVisible: false,
     };
   },
 
@@ -338,10 +294,6 @@ export default {
     dateFormat(date) {
       return moment(date).format("YYYY-MM-DD");
     },
-    // dateFormat(row, column, cellValue, index) {
-    //   let date = row.time;
-    //   return moment(date).format("YYYY-MM-DD");
-    // },
     handleClose() {
       this.dialogVisible = false;
     },
@@ -349,10 +301,36 @@ export default {
       console.log("test detail:" + JSON.stringify(row));
     },
     handleEditClick(row) {
-      this.operationRow = row;
+      Object.assign(this.operationRow, row);
       row.edit = true;
-      // this.dialogVisible = true;
-      console.log("test detail:" + JSON.stringify(row));
+    },
+    save(row) {
+      Object.assign(row, this.operationRow);
+      row.edit = false;
+      (this.operationRow.updateTime =
+        moment(this.operationRow.updateTime).format("YYYY-MM-DD") +
+        " 00:00:00"),
+        (this.operationRow.createTime =
+          moment(this.operationRow.createTime).format("YYYY-MM-DD") +
+          " 00:00:00"),
+        this.$axios
+          .post("/article/updateInfo", this.operationRow)
+          .then((res) => {
+            console.log("test info: " + JSON.stringify(res));
+          });
+    },
+    cancel(row) {
+      row.edit = false;
+    },
+    goto(row) {
+      this.dialogFormVisible = !this.dialogFormVisible;
+      Object.assign(this.operationRow, row);
+      this.$router.push({
+        name: "adminEditor",
+        query: {
+          id: row.id,
+        },
+      });
     },
   },
 };

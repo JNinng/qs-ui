@@ -29,6 +29,16 @@ const routes = [
 				name: "articleManagement",
 				component: ArticleManagement,
 				props: true,
+				children: [
+					{
+						path: "/",
+						name: "adminEditor",
+						component: MdEditor,
+						props: (route) => ({
+							id: route.query.id,
+						}),
+					},
+				],
 			},
 		],
 	},

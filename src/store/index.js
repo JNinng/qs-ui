@@ -48,8 +48,8 @@ const store = new Vuex.Store({
 		},
 		config: {
 			adminShow: false,
-			login: false,
-			noLogin: true,
+			login: true,
+			noLogin: false,
 			id: "",
 			token: "",
 		},
