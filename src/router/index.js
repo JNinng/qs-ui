@@ -9,6 +9,8 @@ import Timeline from "@/components/timeline/Timeline";
 import MDView from "@/components/md/MDView";
 import Tag from "@/components/tag/Tag";
 import About from "@/components/about/About";
+import Admin from "@/components/admin/Admin";
+import ArticleManagement from "@/components/admin/item/ArticleManagement";
 
 const routes = [
 	{ path: "/", name: "home", component: Home },
@@ -16,6 +18,30 @@ const routes = [
 	{ path: "/tag", name: "tag", component: Tag },
 	{ path: "/about", name: "about", component: About },
 	{ path: "/editor", name: "editor", component: MdEditor },
+	{
+		path: "/admin",
+		name: "admin",
+		component: Admin,
+		redirect: "articleManagement",
+		children: [
+			{
+				path: "/articleManagement",
+				name: "articleManagement",
+				component: ArticleManagement,
+				props: true,
+				children: [
+					{
+						path: "/",
+						name: "adminEditor",
+						component: MdEditor,
+						props: (route) => ({
+							id: route.query.id,
+						}),
+					},
+				],
+			},
+		],
+	},
 	{
 		path: "/viewer",
 		name: "viewer",

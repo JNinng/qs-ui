@@ -4,9 +4,15 @@
       :locale="locales"
       :plugins="plugins"
       :uploadImages="uploadImage"
-      :value="value"
+      :value="content"
       @change="handleChange"
+      v-if="load"
     />
+    <div class="operate">
+      <el-tooltip content="保存" placement="top">
+        <el-button type="success" icon="Select" @click="save">保存</el-button>
+      </el-tooltip>
+    </div>
   </div>
 </template>
 
@@ -54,48 +60,35 @@ const plugins = [
 
 export default {
   name: "MdEditor",
+
   components: {
     Editor,
   },
+
+  props: {
+    id: {
+      type: String,
+      default: "null",
+    },
+  },
+  beforeMount() {
+    this.loadContent();
+  },
   data() {
     return {
-      value:
-        "# qs-blog-ui\n" +
-        "\n" +
-        "## Project setup\n" +
-        "\n" +
-        "```\n" +
-        "npm install\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and hot-reloads for development\n" +
-        "\n" +
-        "```\n" +
-        "npm run serve\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and minifies for production\n" +
-        "\n" +
-        "```\n" +
-        "npm run build\n" +
-        "```\n" +
-        "\n" +
-        "### Lints and fixes files\n" +
-        "\n" +
-        "```\n" +
-        "npm run lint\n" +
-        "```\n" +
-        "\n" +
-        "### Customize configuration\n" +
-        "\n" +
-        "See [Configuration Reference](https://cli.vuejs.org/config/).",
+      content: "null",
+      article: {},
+      load: false,
       plugins,
       locales,
     };
   },
+
+  computed: {},
+
   methods: {
     handleChange(v) {
-      this.value = v;
+      this.content = v;
     },
     uploadImage: function (files) {
       console.log("files", files);
@@ -106,6 +99,61 @@ export default {
         },
       ];
     },
+    loadContent() {
+      this.load = false;
+      this.content = "";
+      this.$axios
+        .get("/article/" + this.id, {})
+        .then((res) => {
+          //请求成功
+          this.article = res.data;
+          this.content = res.data.content;
+          this.load = true;
+        })
+        .catch((err) => {
+          console.log("test get err" + JSON.stringify(err));
+        });
+    },
+    save() {
+      this.$axios
+        .post("/article/updateById", {
+          id: this.article.id,
+          userId: this.article.userId,
+          content: this.content,
+          title: this.article.title,
+        })
+        .then((res) => {
+          //请求成功
+          this.$notify({
+            message: res.message + "信息",
+            duration: 800,
+          });
+          this.load = true;
+        })
+        .catch((err) => {
+          console.log("test get err" + JSON.stringify(err));
+        });
+    },
+  },
+
+  watch: {
+    id(newValue, oldValue) {
+      if (newValue != oldValue) {
+        this.loadContent();
+      }
+    },
   },
 };
 </script>
+
+<style>
+.bytemd {
+  height: 74vh;
+}
+
+.operate {
+  margin-top: 6px;
+  margin-bottom: 2px;
+  float: right;
+}
+</style>

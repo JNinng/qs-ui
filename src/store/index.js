@@ -46,6 +46,13 @@ const store = new Vuex.Store({
 		timeline: {
 			currentDate: "",
 		},
+		config: {
+			adminShow: false,
+			login: true,
+			noLogin: false,
+			id: "",
+			token: "",
+		},
 	},
 });
 
