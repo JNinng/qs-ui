@@ -7,7 +7,9 @@
       destroy-on-close="true"
     >
       <div>
-        <router-view></router-view>
+        <router-view
+          @close="dialogFormVisible = !dialogFormVisible"
+        ></router-view>
       </div>
       <template #footer>
         <div style="clear: both"></div>
@@ -147,7 +149,7 @@
               type="primary"
               size="small"
               icon="View"
-              @click="goto(scope.row)"
+              @click="update(scope.row)"
             ></el-button>
           </el-tooltip>
           <el-tooltip content="编辑" placement="top">
@@ -183,19 +185,26 @@
         </template>
       </el-table-column>
     </el-table>
-    <div class="paging">
-      <el-pagination
-        v-model:current-page="currentPage"
-        v-model:page-size="pageSize"
-        :page-sizes="[10, 20, 60, 100]"
-        :small="small"
-        :disabled="disabled"
-        :background="background"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="total"
-        @size-change="handleSizeChange"
-        @current-change="handleCurrentChange"
-      />
+    <div class="articleTail">
+      <div class="paging">
+        <el-pagination
+          v-model:current-page="currentPage"
+          v-model:page-size="pageSize"
+          :page-sizes="[10, 20, 60, 100]"
+          :small="small"
+          :disabled="disabled"
+          :background="background"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </div>
+      <div class="add">
+        <el-tooltip content="添加文章" placement="top">
+          <el-button type="success" icon="Plus" @click="add"> </el-button>
+        </el-tooltip>
+      </div>
     </div>
   </div>
 </template>
@@ -228,7 +237,9 @@ export default {
       pageLoad: false,
       pageListLoad: false,
       dialogVisible: false,
-      operationRow: {},
+      operationRow: {
+        title: "创作",
+      },
       dialogFormVisible: false,
     };
   },
@@ -322,13 +333,23 @@ export default {
     cancel(row) {
       row.edit = false;
     },
-    goto(row) {
+    update(row) {
       this.dialogFormVisible = !this.dialogFormVisible;
       Object.assign(this.operationRow, row);
       this.$router.push({
         name: "adminEditor",
         query: {
           id: row.id,
+          mode: "update",
+        },
+      });
+    },
+    add() {
+      this.dialogFormVisible = !this.dialogFormVisible;
+      this.$router.push({
+        name: "adminEditor",
+        query: {
+          mode: "upload",
         },
       });
     },
@@ -338,6 +359,15 @@ export default {
 
 <style scoped>
 .paging {
+  float: left;
+}
+
+.articleTail {
   margin-top: 10px;
+}
+
+.add {
+  float: right;
+  margin-right: 20px;
 }
 </style>

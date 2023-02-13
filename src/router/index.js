@@ -38,6 +38,7 @@ const routes = [
 						component: MdEditor,
 						props: (route) => ({
 							id: route.query.id,
+							mode:route.query.mode
 						}),
 					},
 				],
@@ -47,16 +48,6 @@ const routes = [
 				name: "commentManagement",
 				component: CommentManagement,
 				props: true,
-				children: [
-					{
-						path: "/",
-						name: "adminEditor",
-						component: MdEditor,
-						props: (route) => ({
-							id: route.query.id,
-						}),
-					},
-				],
 			},
 			{
 				path: "/systemManagement",
