@@ -9,14 +9,14 @@
             </template>
             <el-menu-item index="/articleManagement">文章</el-menu-item>
             <el-menu-item index="/articleList">文章</el-menu-item>
-            <el-menu-item index="/commentManagement">评论</el-menu-item>
+            <el-menu-item index="/systemManagement">系统</el-menu-item>
             <!-- 菜单进行分组 -->
-            <el-menu-item-group title="文件数据" class="default-menu">
+            <!-- <el-menu-item-group title="文件数据" class="default-menu">
               <el-menu-item index="/imageManagement">图床</el-menu-item>
               <el-menu-item index="/fileManagement">文件</el-menu-item>
-            </el-menu-item-group>
+            </el-menu-item-group> -->
           </el-sub-menu>
-          <el-sub-menu index="2">
+          <!-- <el-sub-menu index="2">
             <template #title>
               <span>设置</span>
             </template>
@@ -26,7 +26,7 @@
                 <el-menu-item index="2-1-1">2级菜单</el-menu-item>
               </el-sub-menu>
             </el-menu-item-group>
-          </el-sub-menu>
+          </el-sub-menu> -->
         </el-menu>
       </el-scrollbar>
     </el-col>
@@ -71,8 +71,10 @@ export default {
       console.log(index);
       switch (index) {
         case "/articleManagement":
-          console.log("test 11");
           this.$router.push("/articleManagement");
+          break;
+        case "/systemManagement":
+          this.$router.push("/systemManagement");
           break;
       }
     },

@@ -11,6 +11,7 @@ import Tag from "@/components/tag/Tag";
 import About from "@/components/about/About";
 import Admin from "@/components/admin/Admin";
 import ArticleManagement from "@/components/admin/item/ArticleManagement";
+import SystemManagement from "@/components/admin/item/SystemManagement";
 
 const routes = [
 	{ path: "/", name: "home", component: Home },
@@ -39,6 +40,12 @@ const routes = [
 						}),
 					},
 				],
+			},
+			{
+				path: "/systemManagement",
+				name: "systemManagement",
+				component: SystemManagement,
+				props: true,
 			},
 		],
 	},
