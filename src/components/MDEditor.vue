@@ -1,12 +1,19 @@
 <template>
   <div>
+    <el-input v-model="article.title" placeholder="Title" />
     <Editor
       :locale="locales"
       :plugins="plugins"
       :uploadImages="uploadImage"
-      :value="value"
+      :value="content"
       @change="handleChange"
+      v-if="load"
     />
+    <div class="operate">
+      <el-tooltip content="保存" placement="top">
+        <el-button type="success" icon="Select" @click="save">保存</el-button>
+      </el-tooltip>
+    </div>
   </div>
 </template>
 
@@ -30,6 +37,7 @@ import locales from "bytemd/locales/zh_Hans.json";
 import gfmLocales from "@bytemd/plugin-gfm/locales/zh_Hans.json";
 import mathLocales from "@bytemd/plugin-math/locales/zh_Hans.json";
 import mermaidLocales from "@bytemd/plugin-mermaid/locales/zh_Hans.json";
+import axios from "axios";
 
 const plugins = [
   breaks(),
@@ -54,58 +62,184 @@ const plugins = [
 
 export default {
   name: "MdEditor",
+
   components: {
     Editor,
   },
+
+  props: {
+    id: {
+      type: String,
+      default: "null",
+    },
+    mode: {
+      type: String,
+      default: "update",
+    },
+  },
+  beforeMount() {
+    this.loadContent();
+  },
   data() {
     return {
-      value:
-        "# qs-blog-ui\n" +
-        "\n" +
-        "## Project setup\n" +
-        "\n" +
-        "```\n" +
-        "npm install\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and hot-reloads for development\n" +
-        "\n" +
-        "```\n" +
-        "npm run serve\n" +
-        "```\n" +
-        "\n" +
-        "### Compiles and minifies for production\n" +
-        "\n" +
-        "```\n" +
-        "npm run build\n" +
-        "```\n" +
-        "\n" +
-        "### Lints and fixes files\n" +
-        "\n" +
-        "```\n" +
-        "npm run lint\n" +
-        "```\n" +
-        "\n" +
-        "### Customize configuration\n" +
-        "\n" +
-        "See [Configuration Reference](https://cli.vuejs.org/config/).",
+      content: "",
+      article: {
+        title: "",
+      },
+      load: false,
       plugins,
       locales,
     };
   },
+
+  computed: {},
+
   methods: {
     handleChange(v) {
-      this.value = v;
+      this.content = v;
     },
-    uploadImage: function (files) {
-      console.log("files", files);
-      return [
-        {
-          title: files.map((i) => i.name),
-          url: "http://ninng.top/media/img/seafile-logo.png",
-        },
-      ];
+    uploadImage: async function (files) {
+      // this.$axios
+      //   .uploadImage("/file/upload", files)
+      //   .then((res) => {
+      //     console.log("test image:");
+      //     let data = res.data;
+      //     for (let i = 0; i < data.length; i++) {
+      //       data[i].url =
+      //         this.$axios.serverAddress + "/file/image/" + data[i].url;
+      //     }
+      //     return data;
+      //   })
+      //   .catch((err) => {
+      //     console.log("test image err:" + JSON.stringify(err));
+      //   });
+
+      // var tokenName = localStorage.getItem("token"); // 从本地缓存读取tokenName值
+      // var tokenValue = localStorage.getItem("tokenValue"); // 从本地缓存读取tokenValue值
+      // var header = {
+      //   "Content-Type": "multipart/form-data",
+      // };
+      // if (tokenName != undefined && tokenName != "") {
+      //   header[tokenName] = tokenValue;
+      // }
+
+      // const data = new FormData();
+      // files = Array.from(files);
+      // for (let i = 0; i < files.length; i++) {
+      //   data.append("files", files[i]);
+      // }
+      var result;
+      // await axios({
+      //   method: "post",
+      //   url: "/file/upload",
+      //   header: header,
+      //   data: data,
+      // })
+      //   .then((res) => {
+      //     result = res.data.data;
+      //     console.log("test upload li:" + JSON.stringify(result));
+      //   })
+      //   .catch((err) => {
+      //     console.log("test md err:" + err);
+      //   });
+      result = this.$axios.uploadImage(files);
+
+      console.log("test upload:" + JSON.stringify(result));
+      return result;
+    },
+    loadContent() {
+      console.log("test mode:" + this.mode);
+      switch (this.mode) {
+        case "update":
+          this.load = false;
+          this.content = "";
+          this.$axios
+            .get("/article/" + this.id, {})
+            .then((res) => {
+              //请求成功
+              this.article = res.data;
+              this.content = res.data.content;
+              this.load = true;
+            })
+            .catch((err) => {
+              console.log("test get err" + JSON.stringify(err));
+            });
+          break;
+        case "upload":
+          this.article.title = "创作";
+          this.load = true;
+          break;
+      }
+    },
+    save() {
+      switch (this.mode) {
+        case "update":
+          this.$axios
+            .post("/article/updateById", {
+              id: this.article.id,
+              userId: this.article.userId,
+              content: this.content,
+              title: this.article.title,
+            })
+            .then((res) => {
+              //请求成功
+              this.$notify({
+                message: res.message,
+                duration: 1400,
+              });
+              this.load = true;
+            })
+            .catch((err) => {
+              console.log("test get err" + JSON.stringify(err));
+            });
+          break;
+        case "upload":
+          this.$axios
+            .post("/article/upload", {
+              content: this.content,
+              title: this.article.title,
+            })
+            .then((res) => {
+              //请求成功
+              this.$notify({
+                message: res.message,
+                duration: 1400,
+              });
+              if (res.message == "上传成功！") {
+                this.$emit("close");
+              }
+            })
+            .catch((err) => {
+              console.log("test get err" + JSON.stringify(err));
+            });
+          break;
+      }
+    },
+  },
+
+  watch: {
+    id(newValue, oldValue) {
+      if (newValue != oldValue) {
+        this.loadContent();
+      }
+    },
+    mode(newValue, oldValue) {
+      if (newValue != oldValue) {
+        this.loadContent();
+      }
     },
   },
 };
 </script>
+
+<style>
+.bytemd {
+  height: 72vh;
+}
+
+.operate {
+  margin-top: 6px;
+  margin-bottom: 2px;
+  float: right;
+}
+</style>

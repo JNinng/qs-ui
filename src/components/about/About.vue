@@ -10,18 +10,21 @@
           <MdViewer :content="content"></MdViewer>
         </div>
       </div>
+      <comment-view :articleId="articleId" v-if="load"></comment-view>
     </div>
   </div>
 </template>
 
 <script>
 import MdViewer from "@/components/MdViewer";
+import CommentView from "@/components/comment/CommentView";
 
 export default {
   name: "About",
 
   components: {
     MdViewer,
+    CommentView,
   },
 
   mixins: [],
@@ -33,6 +36,7 @@ export default {
       headPortrait:
         this.$axios.serverAddress + "/file/image/周杰伦%20-%20七里香.jpg",
       content: "",
+      load: false,
     };
   },
 
@@ -43,6 +47,8 @@ export default {
         this.content = res.data.info;
         this.headPortrait =
           this.$axios.serverAddress + "/file/image/" + res.data.headPortrait;
+        this.articleId = res.data.id;
+        this.load = true;
       })
       .catch((err) => {
         console.log("test about info:" + err);

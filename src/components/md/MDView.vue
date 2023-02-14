@@ -2,18 +2,21 @@
   <div class="root">
     <div class="content">
       <MdViewer class="show" :content="content"></MdViewer>
+      <comment-view :articleId="id" v-if="load"></comment-view>
     </div>
   </div>
 </template>
 
 <script>
 import MdViewer from "@/components/MdViewer";
+import CommentView from "@/components/comment/CommentView";
 
 export default {
   name: "MdView",
 
   components: {
     MdViewer,
+    CommentView,
   },
 
   props: ["id"],
@@ -21,6 +24,7 @@ export default {
   data() {
     return {
       content: "x",
+      load: false,
     };
   },
 
@@ -30,6 +34,7 @@ export default {
       .then((res) => {
         //请求成功
         this.content = res.data.content;
+        this.load = true;
       })
       .catch((err) => {
         console.log("test get err" + JSON.stringify(err));

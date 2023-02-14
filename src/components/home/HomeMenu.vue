@@ -14,6 +14,11 @@
       <el-menu-item index="/tag">Tag</el-menu-item>
       <el-menu-item index="/about">About</el-menu-item>
       <el-menu-item index="return">Return</el-menu-item>
+      <el-menu-item style="position: absolute; right: 0" index="/admin">
+        <el-button style="background-color: transparent; border-style: none">
+          <el-icon><User /></el-icon>
+        </el-button>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -22,6 +27,7 @@
 import { ElMenu, ElMenuItem, ElSubMenu } from "element-plus";
 import "element-plus/es/components/menu/style/css";
 import "@/assets/css/home-menu.css";
+import { User } from "@element-plus/icons-vue";
 
 export default {
   name: "HomeMenu",
@@ -30,6 +36,7 @@ export default {
     ElMenu,
     ElMenuItem,
     ElSubMenu,
+    User,
   },
 
   mixins: [],
@@ -69,6 +76,9 @@ export default {
         case "return":
           this.$router.go(-1);
           break;
+        case "/admin":
+          this.$router.push("/admin");
+          break;
       }
     },
     handleScroll: function () {
@@ -90,5 +100,5 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 </style>
