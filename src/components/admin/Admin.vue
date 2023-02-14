@@ -92,6 +92,26 @@ export default {
 
   computed: {},
 
+  beforeMount() {
+    var tokenValue = localStorage.getItem("tokenValue"); // 从本地缓存读取tokenValue值
+    if (!tokenValue) {
+      this.$store.state.config.login = false;
+      this.$store.state.config.noLogin = true;
+    }
+    this.$axios
+      .get("/user/checkLogin", {
+        id: localStorage.getItem("id"),
+      })
+      .then((res) => {
+        if ((res.code = "200")) {
+          this.$notify({
+            message: res.data,
+            duration: 1200,
+          });
+        }
+      });
+  },
+
   created() {},
 
   watch: {},
