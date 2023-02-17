@@ -22,7 +22,7 @@ module.exports = {
 		open: "http://192.168.0.105:8888",
 		proxy: {
 			"/api": {
-				target: "http://localhost:8300/",
+				target: "http://192.168.0.105:8401/",
 				changeOrigin: true,
 				pathRewrite: {
 					"^/api": "",

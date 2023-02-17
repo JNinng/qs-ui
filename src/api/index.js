@@ -2,7 +2,7 @@ import axios from "axios";
 import qs from "qs";
 
 axios.defaults.baseURL = "/api";
-const serverAddress = "http://192.168.0.105:8300";
+const serverAddress = "http://192.168.0.105:8401";
 
 export default {
 	serverAddress,

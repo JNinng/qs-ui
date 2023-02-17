@@ -38,7 +38,7 @@ const routes = [
 						component: MdEditor,
 						props: (route) => ({
 							id: route.query.id,
-							mode:route.query.mode
+							mode: route.query.mode,
 						}),
 					},
 				],
