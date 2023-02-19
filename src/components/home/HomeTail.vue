@@ -1,7 +1,7 @@
 <template>
   <div class="root">
     <div style="width: 380px; margin: 0 auto; padding: 20px 0">
-      <p style="display: block-inline; text-align: center">
+      <p style="display: block-inline; text-align: center; color: #939393">
         © 2021-2023 xxxx.xxx 版权所有
       </p>
       <a
@@ -80,28 +80,30 @@ export default {
 
 <style scoped>
 * {
-  margin: 0;
-  padding: 0;
-  font-size: 13px;
+	margin: 0;
+	padding: 0;
+
+	font-size: 13px;
 }
 
 p {
-  text-align: center;
+	text-align: center;
 }
 
 .root {
-  /* margin: 10px; */
-  padding: 30px 0 20px 0;
+	/* margin: 10px; */
+	padding: 30px 0 20px 0;
 
-  background-color: ivory;
+/* background-color: ivory; */
+	/* background-color: rgb(214, 214, 214); */
+	/* box-shadow: rgba(0, 0, 0, .25) 0 14px 28px, rgba(0, 0, 0, .22) 0 10px 10px; */
 
-  /* box-shadow: rgba(0, 0, 0, .25) 0 14px 28px, rgba(0, 0, 0, .22) 0 10px 10px; */
-
-  align-items: center; /* 垂直居中 */
-  justify-content: center; /* 水平居中 */
+	align-items: center; /* 垂直居中 */
+	justify-content: center; /* 水平居中 */
 }
 
 p {
-  margin-bottom: 4px;
+	margin-bottom: 4px;
 }
+
 </style>

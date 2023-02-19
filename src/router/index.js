@@ -13,6 +13,7 @@ import Admin from "@/components/admin/Admin";
 import ArticleManagement from "@/components/admin/item/ArticleManagement";
 import SystemManagement from "@/components/admin/item/SystemManagement";
 import CommentManagement from "@/components/admin/item/CommentManagement";
+import UserPage from "@/components/user/UserPage";
 
 const routes = [
 	{ path: "/", name: "home", component: Home },
@@ -20,6 +21,14 @@ const routes = [
 	{ path: "/tag", name: "tag", component: Tag },
 	{ path: "/about", name: "about", component: About },
 	{ path: "/editor", name: "editor", component: MdEditor },
+	{
+		path: "/user",
+		name: "user",
+		component: UserPage,
+		props: (route) => ({
+			id: route.query.id,
+		}),
+	},
 	{
 		path: "/admin",
 		name: "admin",
