@@ -2,11 +2,12 @@
   <div class="homeRoot">
     <div class="homeContent">
       <div class="homeTop" v-if="topLoad">
-        <el-carousel height="268px">
-          <el-carousel-item v-for="(item, index) in content" :key="index">
+        <el-carousel height="280px">
+          <el-carousel-item v-for="(item, index) in topData" :key="index">
             <!-- <h3 class="small justify-center" text="2xl">{{ item }}</h3> -->
+            <div class="topTitle">{{ item.title }}</div>
             <div id="mdView" @click="goItem(topIdList[index])">
-              <MdViewer :content="item"></MdViewer>
+              <MdViewer :content="item.content"></MdViewer>
             </div>
           </el-carousel-item>
         </el-carousel>
@@ -69,6 +70,7 @@ export default {
         "1LkD4YXoMZx7",
         "bwOea6d4JYnK",
       ],
+      topData: [],
       content: [],
     };
   },
@@ -96,7 +98,7 @@ export default {
           .get("/article/preview/" + this.topIdList[i], {})
           .then((res) => {
             //请求成功
-            this.content.push(res.data.content);
+            this.topData.push(res.data);
           })
           .catch((err) => {
             console.log("test get err" + JSON.stringify(err));
@@ -163,7 +165,9 @@ export default {
 #mdView {
 	overflow: hidden;
 
-	height: 90%;
+	height: 78%;
+
+	cursor: pointer;
 }
 
 .homeTop {
@@ -174,11 +178,15 @@ export default {
 
 /* padding: 8px 6px; */
 	width: calc(60% + 300px + 1% + 12px);
-	height: 260px;
+	height: 280px;
 
 	background-color: white;
 
 	box-shadow: rgba(9, 30, 66, .25) 0 1px 1px, rgba(9, 30, 66, .13) 0 0 1px 1px;
+}
+
+.topTitle {
+	margin: 6px 20px;
 }
 
 .homeLeft {
