@@ -59,7 +59,6 @@
 import { ElMenu, ElMenuItem, ElSubMenu } from "element-plus";
 import "element-plus/es/components/menu/style/css";
 import "@/assets/css/home-menu.css";
-import { User } from "@element-plus/icons-vue";
 
 export default {
   name: "HomeMenu",
@@ -68,7 +67,6 @@ export default {
     ElMenu,
     ElMenuItem,
     ElSubMenu,
-    User,
   },
 
   mixins: [],
