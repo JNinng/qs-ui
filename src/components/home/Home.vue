@@ -1,29 +1,57 @@
 <template>
-  <div class="root" v-if="isShow">
-    <div class="content" ref="content" v-if="isShow">
+  <div class="homeRoot">
+    <div class="homeContent">
+      <div class="homeTop" v-if="topLoad">
+        <el-carousel height="268px">
+          <el-carousel-item v-for="(item, index) in content" :key="index">
+            <!-- <h3 class="small justify-center" text="2xl">{{ item }}</h3> -->
+            <div id="mdView" @click="goItem(topIdList[index])">
+              <MdViewer :content="item"></MdViewer>
+            </div>
+          </el-carousel-item>
+        </el-carousel>
+      </div>
+      <div class="homeLeft">
+        <div class="tagCard">
+          <div v-for="(item, index) in tagList" :key="index">
+            <div v-if="item.sum >= 8">
+              <tag-list-card
+                class="tagListCard"
+                :id="item.id"
+                :tagName="item.name"
+                mode="tag"
+              ></tag-list-card>
+              <el-divider id="divider" border-style="solid" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="homeRight">
+        <div class="test">4</div>
+        <div class="test">4</div>
+      </div>
+      <!-- <div class="content" ref="content" v-if="isShow">
       <div v-for="(item, index) in listPage.list" :key="index">
         <MdListCard :index="item.id + ''"></MdListCard>
       </div>
-    </div>
-    <div style="text-align: center">
+    </div> -->
+      <!-- <div style="text-align: center">
       <el-button round @click="loadNextPage">继续</el-button>
+    </div> -->
     </div>
   </div>
 </template>
 
 <script>
-import { ref, reactive, watch } from "vue";
-import { onMounted } from "@vue/runtime-core";
-// import MdViewer from "@/components/MdViewer";
-// import MdListCard from "@/components/MdListCard";
-import MdListCard from "@/components/MdListCard";
+import TagListCard from "@/components/home/item/TagListCard";
+import MdViewer from "@/components/MdViewer";
 
 export default {
   name: "Home",
 
   components: {
-    // MdViewer
-    MdListCard,
+    MdViewer,
+    TagListCard,
   },
 
   mixins: [],
@@ -32,57 +60,76 @@ export default {
 
   data() {
     return {
-      isShow: false,
-      listPage: {},
+      tagLoad: false,
+      topLoad: false,
+      tagList: [],
+      topIdList: [
+        "qPz9okBaj35m",
+        "kjWmaQ9ardJ2",
+        "1LkD4YXoMZx7",
+        "bwOea6d4JYnK",
+      ],
+      content: [],
     };
   },
 
-  computed: {
-    getLoad() {
-      return this.$store.state.home.load;
-    },
-    getListPage() {
-      return this.listPage.list;
-    },
-    getHeight() {
-      return this.listPage;
-    },
-  },
+  computed: {},
 
   watch: {
-    "$store.state.home.listPage.list": {
-      handler(newValue, oldValue) {
-        this.isShow = false;
-        this.$nextTick(() => {
-          this.listPage.list = this.$store.state.home.listPage.list;
-          this.isShow = true;
-        });
-      },
-    },
+    // "$store.state.home.listPage.list": {
+    //   handler(newValue, oldValue) {
+    //     this.isShow = false;
+    //     this.$nextTick(() => {
+    //       this.listPage.list = this.$store.state.home.listPage.list;
+    //       this.isShow = true;
+    //     });
+    //   },
+    // },
   },
 
   created() {},
 
   methods: {
+    getTopContent() {
+      for (var i = 0; i < this.topIdList.length; i++) {
+        this.$axios
+          .get("/article/preview/" + this.topIdList[i], {})
+          .then((res) => {
+            //请求成功
+            this.content.push(res.data.content);
+          })
+          .catch((err) => {
+            console.log("test get err" + JSON.stringify(err));
+          });
+      }
+      this.topLoad = true;
+    },
     more() {},
     loadNextPage() {
-      this.$store.state.home.currentPage += 1;
       this.$axios
-        .post("/article/getIdListPage", {
-          page: this.$store.state.home.currentPage,
-          pageSize: this.$store.state.home.pageSize,
-        })
+        .post("/tag/allTag", {})
         .then((res) => {
-          this.$store.state.home.listPage = {
-            list: this.$store.state.home.listPage.list.concat(res.data.list),
-          };
+          this.tagList = res.data;
+          this.tagLoad = true;
+        })
+        .catch((err) => {
+          console.log("test post tag all:" + err);
         });
+    },
+    goItem(id) {
+      this.$router.push({
+        name: "mdView",
+        params: {
+          id: id,
+        },
+      });
     },
   },
 
   mounted() {},
 
   beforeMount() {
+    this.getTopContent();
     this.loadNextPage();
   },
 
@@ -95,22 +142,78 @@ export default {
 </script>
 
 <style scoped>
-.root {
-	width: 100%;
-
-	background-color: ivory;
+.homeRoot {
+	display: flex;
 }
 
-.content {
-	padding: 10px 4% 20px 4%;
-	width: 64%;
+.homeContent {
+	display: flex;
 
-	background-color: ivory;
+	padding: 20px 2%;
+	width: 100%;
+	min-width: 980px;
 
-/* 瀑布流主框 */
-	/* box-shadow: rgba(0, 0, 0, 0.35) 0 5px 8px; */
+	justify-content: center;
 
-	transform: translate3d(19.44%, 0, 0);
+/* align-items: center; */
+	/* background-color: ivory; */
+	flex-wrap: wrap;
+}
+
+#mdView {
+	overflow: hidden;
+
+	height: 90%;
+}
+
+.homeTop {
+	float: left;
+	overflow: hidden;
+
+	margin-bottom: 12px;
+
+/* padding: 8px 6px; */
+	width: calc(60% + 300px + 1% + 12px);
+	height: 260px;
+
+	background-color: white;
+
+	box-shadow: rgba(9, 30, 66, .25) 0 1px 1px, rgba(9, 30, 66, .13) 0 0 1px 1px;
+}
+
+.homeLeft {
+	float: left;
+
+	padding: 8px 6px;
+	width: 60%;
+	min-width: 296px;
+
+	background-color: white;
+
+	box-shadow: rgba(9, 30, 66, .25) 0 1px 1px, rgba(9, 30, 66, .13) 0 0 1px 1px;
+}
+
+.homeRight {
+	margin-left: 1%;
+	min-width: 300px;
+}
+
+#divider {
+	margin: 6px 0;
+}
+
+.test {
+	margin-bottom: 4px;
+	padding: 8px 6px;
+	height: 200px;
+
+	background-color: white;
+
+	box-shadow: rgba(9, 30, 66, .25) 0 1px 1px, rgba(9, 30, 66, .13) 0 0 1px 1px;
+}
+
+.el-carousel__item {
+	background-color: #d3dce6;
 }
 
 </style>

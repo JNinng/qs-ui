@@ -26,7 +26,7 @@ export default {
 			axios({
 				method: "post",
 				url,
-				header: header,
+				headers: header,
 				data: qs.stringify(data),
 			})
 				.then((res) => {
