@@ -28,8 +28,12 @@
         </div>
       </div>
       <div class="homeRight">
-        <div class="test">4</div>
-        <div class="test">4</div>
+        <div class="test">
+          <div class="itemTitle">热榜</div>
+        </div>
+        <div class="test">
+          <div class="itemTitle">来看看吧</div>
+        </div>
       </div>
       <!-- <div class="content" ref="content" v-if="isShow">
       <div v-for="(item, index) in listPage.list" :key="index">
@@ -183,6 +187,14 @@ export default {
 	background-color: white;
 
 	box-shadow: rgba(9, 30, 66, .25) 0 1px 1px, rgba(9, 30, 66, .13) 0 0 1px 1px;
+}
+
+.itemTitle {
+	border-bottom: solid 1px rgba(119, 119, 119, .314);
+	padding-bottom: 1px;
+
+	font-size: 20px;
+	font-weight: bold;
 }
 
 .topTitle {
