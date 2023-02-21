@@ -35,7 +35,7 @@
       <div class="aSearch">
         <el-input v-model="searchKey" placeholder="输入....">
           <template #append>
-            <el-button icon="Search" @click="search" />
+            <el-button @click="search">✔</el-button>
           </template>
         </el-input>
       </div>
