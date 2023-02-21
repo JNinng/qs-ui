@@ -14,6 +14,7 @@ import ArticleManagement from "@/components/admin/item/ArticleManagement";
 import SystemManagement from "@/components/admin/item/SystemManagement";
 import CommentManagement from "@/components/admin/item/CommentManagement";
 import UserPage from "@/components/user/UserPage";
+import Search from "@/components/search/Search";
 
 const routes = [
 	{ path: "/", name: "home", component: Home },
@@ -21,6 +22,14 @@ const routes = [
 	{ path: "/tag", name: "tag", component: Tag },
 	{ path: "/about", name: "about", component: About },
 	{ path: "/editor", name: "editor", component: MdEditor },
+	{
+		path: "/search",
+		name: "search",
+		component: Search,
+		props: (route) => ({
+			searchKey: route.query.searchKey,
+		}),
+	},
 	{
 		path: "/user",
 		name: "user",

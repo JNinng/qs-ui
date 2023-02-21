@@ -19,8 +19,8 @@
         <el-button
           color="#ffffff"
           style="background-color: white; border-style: none"
+          icon="User"
         >
-          <el-icon><User /></el-icon>
         </el-button>
       </el-menu-item>
     </el-menu>
@@ -33,9 +33,9 @@
         <el-icon><User /></el-icon>
       </el-button> -->
       <div class="aSearch">
-        <el-input v-model="input3" placeholder="Please input">
+        <el-input v-model="searchKey" placeholder="输入....">
           <template #append>
-            <el-button icon="Search" />
+            <el-button icon="Search" @click="search" />
           </template>
         </el-input>
       </div>
@@ -56,20 +56,13 @@
 </template>
 
 <script>
-import { ElMenu, ElMenuItem, ElSubMenu } from "element-plus";
 import "element-plus/es/components/menu/style/css";
 import "@/assets/css/home-menu.css";
-import { User } from "@element-plus/icons-vue";
 
 export default {
   name: "HomeMenu",
 
-  components: {
-    ElMenu,
-    ElMenuItem,
-    ElSubMenu,
-    User,
-  },
+  components: {},
 
   mixins: [],
 
@@ -82,6 +75,7 @@ export default {
       default_active: 1,
       headPortrait: "",
       user: {},
+      searchKey: "",
     };
   },
 
@@ -96,6 +90,16 @@ export default {
   created() {},
 
   methods: {
+    search() {
+      if (this.searchKey && this.searchKey != "" && this.searchKey != null) {
+        this.$router.push({
+          name: "search",
+          query: {
+            searchKey: this.searchKey,
+          },
+        });
+      }
+    },
     hoverHeadPortrait() {
       console.log("test HeadPortrait");
       this.$router.push({
