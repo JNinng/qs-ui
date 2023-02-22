@@ -1,8 +1,9 @@
 import axios from "axios";
 import qs from "qs";
 
-axios.defaults.baseURL = "/api";
+// axios.defaults.baseURL = "/api";
 const serverAddress = "http://192.168.0.105:8401";
+axios.defaults.baseURL = serverAddress + "/";
 
 export default {
 	serverAddress,
