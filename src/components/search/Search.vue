@@ -7,9 +7,14 @@
         v-for="(item, index) in searchResult"
         :key="index"
       >
-        <div class="itemTitle" v-html="item.title"></div>
-        <div style="height: 200px; overflow: hidden">
-          <MdViewer :content="item.content"></MdViewer>
+        <div @click="goItem(item.id)">
+          <div class="itemTitle">
+            <el-icon style="margin-right: 12px"><DArrowRight /></el-icon>
+            <span v-html="item.title"></span>
+          </div>
+          <div style="height: 200px; overflow: hidden">
+            <MdViewer :content="item.content"></MdViewer>
+          </div>
         </div>
       </div>
     </div>
@@ -83,14 +88,19 @@ export default {
 
   created() {},
 
-  watch: {},
+  watch: {
+    "$route.query.searchKey"(newValue, oldValue) {
+      this.loadData();
+    },
+  },
 
   methods: {
     loadData() {
+      this.searchResult = [];
       this.$axios
         .post("/es/index/searchArticle", {
           key: this.searchKey,
-          page: this.currentPage,
+          page: this.currentPage - 1,
           pageSize: this.pageSize,
         })
         .then((res) => {
@@ -109,6 +119,15 @@ export default {
     handleCurrentChange(num) {
       this.loadData();
     },
+    goItem(id) {
+      let routeData = this.$router.resolve({
+        name: "mdView",
+        params: {
+          id: id,
+        },
+      });
+      window.open(routeData.href, "_blank");
+    },
   },
 };
 </script>
@@ -123,7 +142,7 @@ export default {
 }
 
 .itemTitle {
-	margin: 1px 20px;
+	margin: 0 20px;
 	border-bottom: solid .1px rgba(119, 119, 119, .314);
 	padding: 12px 20px 0 20px;
 

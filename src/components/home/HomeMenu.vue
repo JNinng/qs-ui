@@ -33,7 +33,12 @@
         <el-icon><User /></el-icon>
       </el-button> -->
       <div class="aSearch">
-        <el-input v-model="searchKey" placeholder="输入....">
+        <el-input
+          id="searchInput"
+          v-model="searchKey"
+          @keyup.enter="search"
+          placeholder="输入...."
+        >
           <template #append>
             <el-button @click="search">✔</el-button>
           </template>
@@ -156,6 +161,13 @@ export default {
   unmounted() {
     window.removeEventListener("scroll", this.handleScroll);
   },
+  directives: {
+    focus: {
+      inserted: function (el) {
+        el.querySelector("input").focus;
+      },
+    },
+  },
 };
 </script>
 
@@ -166,6 +178,10 @@ export default {
 	border-bottom: solid 1px #dcdfe6;
 
 	background-color: white;
+}
+
+#searchInput:focus {
+	width: 300px;
 }
 
 .login {
