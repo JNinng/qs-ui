@@ -68,7 +68,7 @@
                   {{ item.title }}
                 </div>
                 <div class="articleCardContent">
-                  斯蒂芬闪光点发货所得到的多多多多多多多dddddddddddddddddddddddddddddddd胜多负少多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多多
+                  {{ item.content }}
                 </div>
                 <div class="articleCardTag">
                   {{ item.date }}
@@ -209,6 +209,7 @@ export default {
     getCreateTime() {
       return moment(this.info.createTime).format("yyyy年MM月DD日");
     },
+    getArticleContent() {},
   },
 
   created() {
@@ -255,14 +256,12 @@ export default {
       var mode = "article";
       switch (mode) {
         case "article":
-          console.log(
-            "test :" +
-              this.data.article.page +
-              "++" +
-              this.data.article.pageSize
-          );
           this.$axios
             .post("/article/getIdListPage", {
+              id:
+                this.id && this.id != "null"
+                  ? this.id
+                  : localStorage.getItem("id"),
               page: this.data.article.page,
               pageSize: this.data.article.pageSize,
             })
@@ -468,6 +467,7 @@ export default {
 	-webkit-box-orient: vertical;
 
 	margin-top: 6px;
+	height: 48px;
 
 	font-size: 14px;
 	line-height: 24px;
