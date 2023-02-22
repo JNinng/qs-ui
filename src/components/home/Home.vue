@@ -28,10 +28,17 @@
         </div>
       </div>
       <div class="homeRight">
-        <div class="test">
-          <div class="itemTitle">热榜</div>
+        <div class="rightCard">
+          <div>
+            <div class="itemTitle">今日热榜</div>
+            <div v-for="(item, index) in hotData" :key="index">
+              <div class="hotItem" @click="goItem(item.id)">
+                {{ item.title }}
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="test">
+        <div class="rightCard">
           <div class="itemTitle">来看看吧</div>
         </div>
       </div>
@@ -76,6 +83,7 @@ export default {
       ],
       topData: [],
       content: [],
+      hotData: [],
     };
   },
 
@@ -130,9 +138,18 @@ export default {
         },
       });
     },
+    loadHot() {
+      this.$axios.post("/article/hot", {}).then((res) => {
+        if ((res.code = "200" && res.data.list.length > 0)) {
+          this.hotData = res.data.list;
+        }
+      });
+    },
   },
 
-  mounted() {},
+  mounted() {
+    this.loadHot();
+  },
 
   beforeMount() {
     this.getTopContent();
@@ -190,11 +207,29 @@ export default {
 }
 
 .itemTitle {
+	overflow: hidden;
+
 	border-bottom: solid 1px rgba(119, 119, 119, .314);
 	padding-bottom: 1px;
 
 	font-size: 20px;
 	font-weight: bold;
+}
+
+.hotItem {
+	overflow: hidden;
+
+	height: 28px;
+
+	line-height: 28px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+
+	cursor: pointer;
+}
+
+.hotItem:hover {
+	background-color: rgba(219, 219, 219, .314);
 }
 
 .topTitle {
@@ -215,17 +250,18 @@ export default {
 
 .homeRight {
 	margin-left: 1%;
-	min-width: 300px;
+	width: 300px;
 }
 
 #divider {
 	margin: 6px 0;
 }
 
-.test {
-	margin-bottom: 4px;
+.rightCard {
+	margin-bottom: 8px;
 	padding: 8px 6px;
-	height: 200px;
+
+/* height: 200px; */
 
 	background-color: white;
 
