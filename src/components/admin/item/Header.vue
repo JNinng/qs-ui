@@ -11,7 +11,7 @@
           <span v-if="this.$store.state.config.login">
             <el-tooltip content="退出连接" placement="bottom">
               <el-icon :size="25" style="height: 50px; width: 50px"
-                ><User
+                ><img class="loginImg" :src="info.headPortrait"
               /></el-icon>
             </el-tooltip>
           </span>
@@ -23,7 +23,7 @@
             </el-tooltip>
           </span> </span
       ></el-menu-item>
-      <el-menu-item index="1">CheckLogin</el-menu-item>
+      <el-menu-item index="1">{{ info.name }}</el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -39,7 +39,13 @@ export default {
   props: [],
 
   data() {
-    return {};
+    return {
+      info: {},
+    };
+  },
+
+  beforeMount() {
+    this.getHeadPortrait();
   },
 
   mounted() {},
@@ -48,7 +54,11 @@ export default {
 
   created() {},
 
-  watch: {},
+  watch: {
+    "$store.state.config.login"(newValue, oldValue) {
+      this.getHeadPortrait();
+    },
+  },
 
   methods: {
     handleSelect: function (index) {
@@ -98,9 +108,29 @@ export default {
           break;
       }
     },
+    getHeadPortrait() {
+      var id = localStorage.getItem("id");
+      if (id) {
+        this.$axios.post("/user/info", { id: id }).then((res) => {
+          this.info = res.data;
+          this.info.headPortrait =
+            this.$axios.serverAddress + "/file/image/" + res.data.headPortrait;
+        });
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+.loginImg {
+	overflow: hidden;
+
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+
+	cursor: pointer;
+}
+
 </style>
