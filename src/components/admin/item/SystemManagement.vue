@@ -146,7 +146,7 @@ export default {
 
   methods: {
     getPageInfo() {
-      this.$axios.get("/admin/getAll", {}).then((res) => {
+      this.$axios.post("/admin/getAll", {}).then((res) => {
         if (res.code == "200") {
           this.total = res.data.total;
           this.pageLoad = true;

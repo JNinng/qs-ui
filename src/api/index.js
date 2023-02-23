@@ -65,7 +65,7 @@ export default {
 		await axios({
 			method: "post",
 			url: "/file/upload",
-			header: header,
+			headers: header,
 			data: data,
 		})
 			.then((res) => {
@@ -95,7 +95,7 @@ export default {
 			axios({
 				method: "get",
 				url,
-				header: header,
+				headers: header,
 				params: data,
 			})
 				.then((res) => {
