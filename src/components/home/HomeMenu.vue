@@ -53,7 +53,18 @@
       </div>
       <div v-else>
         <div class="login">
-          <img :src="headPortrait" @click="hoverHeadPortrait" />
+          <el-popover :width="34" trigger="hover">
+            <template #reference>
+              <img :src="headPortrait" @click="hoverHeadPortrait" />
+            </template>
+            <template #default>
+              <div class="minMenu">
+                <el-table :data="menuData" @row-click="clickMinMenu">
+                  <el-table-column prop="name"></el-table-column>
+                </el-table>
+              </div>
+            </template>
+          </el-popover>
         </div>
       </div>
     </div>
@@ -81,6 +92,16 @@ export default {
       headPortrait: "",
       user: {},
       searchKey: "",
+      menuData: [
+        {
+          id: 1,
+          name: "个人空间",
+        },
+        {
+          id: 0,
+          name: "退出登录",
+        },
+      ],
     };
   },
 
@@ -106,7 +127,6 @@ export default {
       }
     },
     hoverHeadPortrait() {
-      console.log("test HeadPortrait");
       this.$router.push({
         name: "user",
       });
@@ -123,7 +143,6 @@ export default {
       }
     },
     handleSelect: function (index) {
-      console.log(index);
       switch (index) {
         case "/":
           this.$router.push("/");
@@ -152,6 +171,27 @@ export default {
       this.scroll = scrollTop;
       // console.log(this.isVisible);
       // console.log(scrollTop);
+    },
+    clickMinMenu(row, column, e) {
+      switch (row.id) {
+        case 0:
+          this.$axios.get("/user/logout", {}).then((res) => {
+            if (res.code == "200") {
+              localStorage.removeItem("id");
+              localStorage.removeItem("token");
+              localStorage.removeItem("tokenValue");
+              this.$store.state.config.login = false;
+              this.$store.state.config.noLogin = true;
+              this.$router.replace({
+                name: "home",
+              });
+            }
+          });
+          break;
+        case 1:
+          this.hoverHeadPortrait();
+          break;
+      }
     },
   },
   mounted() {
@@ -187,6 +227,7 @@ export default {
 .login {
 	display: table-cell;
 
+	padding-right: 16px;
 	width: 59px;
 	height: 59px;
 
@@ -209,6 +250,14 @@ export default {
 	height: 50px;
 
 	background-color: rgb(202, 202, 202);
+}
+
+.minMenu {
+	text-align: right;
+
+	background-color: transparent;
+
+	cursor: pointer;
 }
 
 .left {
