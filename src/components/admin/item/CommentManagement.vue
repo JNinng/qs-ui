@@ -1,25 +1,5 @@
 <template>
   <div>
-    <el-dialog
-      v-model="dialogFormVisible"
-      :title="operationRow.title"
-      fullscreen="true"
-      destroy-on-close="true"
-    >
-      <div>
-        <comment-item
-          :dialogFormVisible="dialogFormVisible"
-          :id="operationRow.id"
-        />
-      </div>
-      <template #footer>
-        <div style="clear: both"></div>
-        <span class="dialog-footer">
-          <el-button @click="dialogFormVisible = false">返回管理</el-button>
-        </span>
-      </template>
-    </el-dialog>
-
     <!--  -->
     <el-table
       :data="tableData"
@@ -30,45 +10,35 @@
       max-height="80vh"
       :v-if="pageListLoad"
     >
-      <el-table-column prop="id" label="ID" sortable width="110" />
-      <el-table-column prop="userId" label="UserID" sortable width="110" />
+      <el-table-column fixed label="Article" sortable width="160">
+        <template #default="scope">
+          <span>{{ getArticleTitle(scope.row.comment.articleId) }}</span>
+        </template></el-table-column
+      >
       <el-table-column
-        fixed
-        prop="title"
-        label="title"
-        show-overflow-tooltip
+        prop="comment.content"
+        label="Content"
         sortable
         width="200"
-      >
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        label="CreateTime"
-        sortable
-        width="180"
-      >
+      />
+      <el-table-column label="CreateTime" sortable width="180">
         <template #default="scope">
-          <span>{{ dateFormat(scope.row.createTime) }}</span>
+          <span>{{ dateFormat(scope.row.comment.createTime) }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="updateTime"
-        label="UpdateTime"
-        sortable
-        width="180"
-      >
+      <el-table-column label="UpdateTime" sortable width="180">
         <template #default="scope">
-          <span>{{ dateFormat(scope.row.updateTime) }}</span>
+          <span>{{ dateFormat(scope.row.comment.updateTime) }}</span>
         </template>
       </el-table-column>
       <el-table-column fixed="right" label="Operations" width="120">
         <template #default="scope">
           <el-tooltip content="查看详情" placement="top">
             <el-button
-              type="primary"
+              type="danger"
               size="small"
-              icon="View"
-              @click="goto(scope.row)"
+              icon="Delete"
+              @click="toDelete(scope.row)"
             ></el-button>
           </el-tooltip>
         </template>
@@ -90,6 +60,7 @@
     </div>
   </div>
 </template>
+  
 
 <script>
 import CommentItem from "@/components/admin/item/CommentItem";
@@ -107,7 +78,7 @@ export default {
   props: [],
 
   beforeMount() {
-    this.getPageInfo();
+    this.loadData();
   },
 
   data() {
@@ -119,12 +90,10 @@ export default {
       small: false,
       background: false,
       disabled: false,
-      pageLoad: false,
       pageListLoad: false,
-      dialogVisible: false,
       operationRow: {},
-      dialogFormVisible: false,
       dialog: false,
+      articleTitle: {},
     };
   },
 
@@ -156,48 +125,45 @@ export default {
   },
 
   methods: {
-    getPageInfo() {
-      this.$axios.get("/article/pageInfo", {}).then((res) => {
-        if (res.code == "200") {
-          this.total = res.data.total;
-          this.pageLoad = true;
-          this.loadData();
-        }
-      });
-    },
+    loadComment() {},
     // 页大小改变
     handleSizeChange(num) {
       this.loadData();
     },
     // 换页
     handleCurrentChange(num) {
-      this.loadData();
+      this.loadData(num);
     },
-    loadData() {
+    loadData(num) {
+      if (num > 0) {
+        this.currentPage = num;
+      }
+      this.tableData = [];
       this.$axios
-        .post("/article/getPageList", {
+        .post("/comment/byUserId", {
           page: this.currentPage,
           pageSize: this.pageSize,
         })
         .then((res) => {
           if (res.code == "200") {
-            this.tableData = res.data;
-            this.pageListLoad = true;
+            if (res.data.length > 0) {
+              this.tableData = res.data;
+              this.total = res.data[0].parentCount;
+              this.pageListLoad = true;
+            }
           }
         });
     },
     dateFormat(date) {
       return moment(date).format("YYYY-MM-DD");
     },
-    handleClose() {
-      this.dialogVisible = false;
-    },
-    handleDetailClick(row) {
-      console.log("test detail:" + JSON.stringify(row));
-    },
-    handleEditClick(row) {
-      Object.assign(this.operationRow, row);
-      this.dialog = true;
+    getArticleTitle(id) {
+      if (JSON.stringify(this.articleTitle[id]) == undefined) {
+        this.$axios.get("/article/info/" + id, {}).then((res) => {
+          this.articleTitle[id] = res.data.title;
+        });
+      }
+      return this.articleTitle[id];
     },
     save(row) {
       Object.assign(row, this.operationRow);
@@ -214,9 +180,26 @@ export default {
           });
     },
     cancel(row) {},
-    goto(row) {
-      Object.assign(this.operationRow, row);
-      this.dialogFormVisible = !this.dialogFormVisible;
+    toDelete(row) {
+      console.log("tese delete:" + JSON.stringify(row));
+      console.log("tese delete:" + row.comment.id);
+      this.$axios
+        .post("/comment/deleteById", {
+          id: row.comment.id,
+        })
+        .then((res) => {
+          if (res.code == "200") {
+            this.$notify({
+              message: "删除成功",
+              duration: 1000,
+            });
+          } else {
+            this.$notify({
+              message: res.message,
+              duration: 1000,
+            });
+          }
+        });
     },
   },
 };
@@ -224,6 +207,7 @@ export default {
 
 <style scoped>
 .paging {
-  margin-top: 10px;
+	margin-top: 10px;
 }
+
 </style>
