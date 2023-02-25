@@ -37,8 +37,6 @@
               >粉丝：{{ info.fansNumber }}</span
             >
             <el-divider id="divider" border-style="dashed" />
-            <span>获得收藏：{{ info.getLikes }}</span>
-            <el-divider id="divider" border-style="dashed" />
             <span>总访问：{{ info.pageViewNumber }}</span>
           </div>
           <el-divider id="aDivider" border-style="dashed" />
