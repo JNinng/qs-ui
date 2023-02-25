@@ -106,6 +106,15 @@ export default {
     };
   },
 
+  watch: {
+    "$route.path"(newValue, oldValue) {
+      if (newValue != "/articleManagement") {
+        this.$store.state.config.isVisible = true;
+        this.$store.state.config.adminShow = false;
+      }
+    },
+  },
+
   methods: {
     handleClose() {
       console.log("test to home");
@@ -162,67 +171,65 @@ export default {
 </script>
 
 <style >
-
 /* * {
   margin: 0;
   padding: 0;
 } */
 
 .root {
-	background-color: rgb(228, 228, 228);
+  background-color: rgb(228, 228, 228);
 }
 
 .menu {
-	position: fixed;
-	z-index: 99;
+  position: fixed;
+  z-index: 99;
 
-	width: 100%;
-	height: 59px;
+  width: 100%;
+  height: 59px;
 
-	transition: all .2s;
-	transform: translate3d(0, -100%, 0);
+  transition: all 0.2s;
+  transform: translate3d(0, -100%, 0);
 }
 
 .content {
-	margin-top: 59px;
+  margin-top: 59px;
 }
 
 .visible {
-	transition: all .2s;
-	transform: translateZ(0);
+  transition: all 0.2s;
+  transform: translateZ(0);
 }
 
 .adminContent {
-	margin-top: 0;
+  margin-top: 0;
 }
 
 .adminTail {
-	display: none;
+  display: none;
 }
 
 .adminMenu {
-	display: none;
+  display: none;
 }
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
 ::-webkit-scrollbar {
-	width: 6px;
+  width: 6px;
 }
 
 /*定义滚动条轨道*/
 ::-webkit-scrollbar-track {
-	border-radius: 12px;
+  border-radius: 12px;
 
-	background-color: rgb(209, 209, 209);
+  background-color: rgb(209, 209, 209);
 }
 
 /*定义滑块*/
 ::-webkit-scrollbar-thumb {
-	border-radius: 12px;
-	height: 10px;
+  border-radius: 12px;
+  height: 10px;
 
-	background-color: #9e9e9e;
-	/* box-shadow: inset 0 0 .375rem #999; */
+  background-color: #9e9e9e;
+  /* box-shadow: inset 0 0 .375rem #999; */
 }
-
 </style>

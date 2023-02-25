@@ -24,6 +24,11 @@
           </span> </span
       ></el-menu-item>
       <el-menu-item index="1">{{ info.name }}</el-menu-item>
+      <el-menu-item index="2">
+        <el-button>
+          <el-icon><HomeFilled /></el-icon>
+        </el-button>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -107,6 +112,9 @@ export default {
                 });
               }
             });
+          break;
+        case "2":
+          this.$router.replace("/");
           break;
       }
     },
