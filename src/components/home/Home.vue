@@ -40,6 +40,11 @@
         </div>
         <div class="rightCard">
           <div class="itemTitle">来看看吧</div>
+          <div v-for="(item, index) in timelineData" :key="index">
+            <div class="hotItem" @click="goItem(item.id)">
+              {{ item.title }}
+            </div>
+          </div>
         </div>
       </div>
       <!-- <div class="content" ref="content" v-if="isShow">
@@ -84,6 +89,7 @@ export default {
       topData: [],
       content: [],
       hotData: [],
+      timelineData: [],
     };
   },
 
@@ -104,6 +110,18 @@ export default {
   created() {},
 
   methods: {
+    loadTimelineData() {
+      this.$axios
+        .post("/article/getIdListPage", {
+          page: 1,
+          pageSize: 10,
+        })
+        .then((res) => {
+          if (res.data.list.length > 0) {
+            this.timelineData = res.data.list;
+          }
+        });
+    },
     getTopContent() {
       for (var i = 0; i < this.topIdList.length; i++) {
         this.$axios
@@ -154,6 +172,7 @@ export default {
   beforeMount() {
     this.getTopContent();
     this.loadNextPage();
+    this.loadTimelineData();
   },
 
   computed: {
