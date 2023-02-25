@@ -114,15 +114,37 @@
               <li
                 v-for="(item, index) in data.follow.data"
                 :key="index"
-                class="infinite-list-item"
+                class="follow-infinite-list-item"
               >
-                <div class="articleCardTitle">
-                  {{ item.title }}
-                </div>
-                <div class="articleCardContent"></div>
-                <div class="articleCardTag">
-                  {{ item.date }}
-                </div>
+                <table style="width: 100%">
+                  <tr>
+                    <td style="width: 80px">
+                      <div class="relationHeadPortrait">
+                        <img
+                          :src="imgBaseUrl + item.headPortrait"
+                          @click="gotoUser(item.id)"
+                        />
+                      </div>
+                    </td>
+                    <td @click="gotoUser(item.id)">
+                      <div class="relationName">
+                        {{ item.name }}
+                      </div>
+                    </td>
+                    <td style="width: 80px">
+                      <div v-if="isVisitor">
+                        <el-button @click="cancelFollow(item.id)"
+                          >取消关注</el-button
+                        >
+                      </div>
+                      <div v-else>
+                        <el-button @click="addFollow(item.id)"
+                          >添加关注</el-button
+                        >
+                      </div>
+                    </td>
+                  </tr>
+                </table>
               </li>
             </ul>
           </div>
@@ -178,9 +200,10 @@ export default {
   data() {
     return {
       isVisible: true,
+      isVisitor: !(this.id != localStorage.getItem("id")),
       infoLoad: false,
       info: {},
-      activeName: "article",
+      activeName: "follow",
       count: 4,
       data: {
         article: {
@@ -193,6 +216,7 @@ export default {
         follow: { load: false, page: 1, pageSize: 8, data: [] },
         fans: { load: false, page: 1, pageSize: 8, data: [] },
       },
+      imgBaseUrl: this.$axios.serverAddress + "/file/image/",
     };
   },
 
@@ -223,12 +247,48 @@ export default {
     );
   },
 
-  watch: {},
+  watch: {
+    id(newValue, oldValue) {
+      this.$router.go(0);
+    },
+  },
 
   methods: {
+    cancelFollow(id) {
+      this.$axios
+        .post("/user/cancelFollow", {
+          bUserId: id,
+        })
+        .then((res) => {
+          this.$notify({
+            message: res.message,
+            duration: 1000,
+          });
+        });
+    },
+    addFollow(id) {
+      this.$axios
+        .post("/user/follow", {
+          bUserId: id,
+        })
+        .then((res) => {
+          this.$notify({
+            message: res.message,
+            duration: 1000,
+          });
+        });
+    },
     gotoArticle(id) {
       this.$router.push({
         name: "mdView",
+        params: {
+          id: id,
+        },
+      });
+    },
+    gotoUser(id) {
+      this.$router.push({
+        name: "user",
         params: {
           id: id,
         },
@@ -242,7 +302,7 @@ export default {
       var that = this;
       this.$axios
         .post("/user/info", {
-          id: id_,
+          id: this.id,
         })
         .then((res) => {
           this.info = res.data;
@@ -278,7 +338,25 @@ export default {
       }
     },
     loadResource() {},
-    loadFollow() {},
+    loadFollow() {
+      this.$axios
+        .post("/user/getFollow", {
+          id:
+            this.id && this.id != "null" ? this.id : localStorage.getItem("id"),
+          page: this.data.follow.page,
+          pageSize: this.data.follow.pageSize,
+        })
+        .then((res) => {
+          if (res.data.userList.length > 0) {
+            this.data.follow.page += 1;
+            this.data.follow.data = this.data.follow.data.concat(
+              res.data.userList
+            );
+            this.data.follow.userId = res.data.userId;
+            this.data.follow.load = true;
+          }
+        });
+    },
     loadFans() {},
   },
 };
@@ -485,6 +563,37 @@ export default {
 	font-size: 14px;
 
 	color: #666;
+}
+
+.infinite-list .follow-infinite-list-item {
+	margin: 10px;
+	padding: 10px 8px;
+	height: 65px;
+
+	color: rgb(0, 0, 0);
+
+	box-shadow: rgba(9, 30, 66, .25) 0 1px 1px, rgba(9, 30, 66, .13) 0 0 1px 1px;
+
+	cursor: pointer;
+}
+
+.relationHeadPortrait >>> img {
+	float: left;
+
+	border-radius: 50%;
+	width: 60px;
+	height: 60px;
+
+	box-shadow: rgba(0, 0, 0, .8) 0 0 2px 4px,
+	rgba(255, 255, 255, .8) 0 0 1px 6px;
+
+	align-items: center;
+}
+
+.relationName {
+	float: left;
+
+	font-size: 20px;
 }
 
 </style>
