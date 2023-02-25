@@ -52,7 +52,7 @@
         class="demo-tabs"
         v-model="activeName"
         type="border-card"
-        @tab-click="handleClick"
+        @tab-change="handleClick"
       >
         <el-tab-pane label="文章" name="article">
           <div v-if="data.article.load">
@@ -332,7 +332,28 @@ export default {
           this.infoLoad = true;
         });
     },
-    handleClick() {},
+    handleClick(name) {
+      switch (name) {
+        case "article":
+          this.data.article.load = false;
+          this.data.article.page = 1;
+          this.data.article.data = [];
+          this.loadArticle();
+          break;
+        case "follow":
+          this.data.follow.load = false;
+          this.data.follow.page = 1;
+          this.data.follow.data = [];
+          this.loadFollow();
+          break;
+        case "fans":
+          this.data.fans.load = false;
+          this.data.fans.page = 1;
+          this.data.fans.data = [];
+          this.loadFans();
+          break;
+      }
+    },
     loadArticle() {
       var mode = "article";
       switch (mode) {
