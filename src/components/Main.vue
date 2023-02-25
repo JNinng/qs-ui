@@ -122,17 +122,31 @@ export default {
           password: this.$store.state.config.user.password,
         })
         .then((res) => {
-          const token = res.data.token;
-          const id = res.data.id;
-          console.log("test 1 login:" + res);
-          localStorage.setItem("token", "token");
-          localStorage.setItem("tokenValue", token);
-          localStorage.setItem("id", res.data.id);
-          this.$store.state.config.id = id;
-          this.$store.state.config.token = token;
-          this.$store.state.config.login = true;
-          this.$store.state.config.noLogin = false;
-          this.$store.state.config.toLogin = false;
+          if (res.code == "200") {
+            const token = res.data.token;
+            const id = res.data.id;
+            console.log("test 1 login:" + res);
+            localStorage.setItem("token", "token");
+            localStorage.setItem("tokenValue", token);
+            localStorage.setItem("id", res.data.id);
+            this.$store.state.config.id = id;
+            this.$store.state.config.token = token;
+            this.$axios.post("/user/info", { id: id }).then((res) => {
+              this.$store.state.config.info = res.data;
+              this.$store.state.config.info.headPortrait =
+                this.$axios.serverAddress +
+                "/file/image/" +
+                res.data.headPortrait;
+              this.$store.state.config.login = true;
+              this.$store.state.config.noLogin = false;
+              this.$store.state.config.toLogin = false;
+            });
+          } else {
+            this.$notify({
+              message: res.message,
+              duration: 1000,
+            });
+          }
         });
     },
     scroll(value) {

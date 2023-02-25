@@ -55,7 +55,10 @@
         <div class="login">
           <el-popover :width="34" trigger="hover">
             <template #reference>
-              <img :src="headPortrait" @click="hoverHeadPortrait" />
+              <img
+                :src="$store.state.config.info.headPortrait"
+                @click="hoverHeadPortrait"
+              />
             </template>
             <template #default>
               <div class="minMenu">
@@ -135,11 +138,11 @@ export default {
       var id = localStorage.getItem("id");
       if (id) {
         this.$axios.post("/user/info", { id: id }).then((res) => {
-          this.headPortrait =
+          this.$store.state.config.info.headPortrait =
             this.$axios.serverAddress + "/file/image/" + res.data.headPortrait;
+          this.$store.state.config.login = true;
+          this.$store.state.config.noLogin = false;
         });
-        this.$store.state.config.login = true;
-        this.$store.state.config.noLogin = false;
       }
     },
     handleSelect: function (index) {
