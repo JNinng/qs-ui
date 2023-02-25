@@ -82,26 +82,41 @@
           </div>
           <div class="noData" v-else>暂无内容</div></el-tab-pane
         >
-        <el-tab-pane label="收藏" name="resource">
-          <div v-if="data.resource.load > 0">
+        <el-tab-pane label="收藏" name="favorite">
+          <div v-if="data.favorite.load > 0">
             <ul
-              v-infinite-scroll="loadResource"
+              v-infinite-scroll="loadFavorite"
               infinite-scroll-immediate="true"
               style="overflow: auto"
               class="infinite-list"
             >
               <li
-                v-for="(item, index) in data.article.data"
+                v-for="(item, index) in data.favorite.data"
                 :key="index"
                 class="infinite-list-item"
               >
-                <div class="articleCardTitle">
-                  {{ item.title }}
-                </div>
-                <div class="articleCardContent"></div>
-                <div class="articleCardTag">
-                  {{ item.date }}
-                </div>
+                <table>
+                  <tr>
+                    <td>
+                      <div class="articleCardTitle">
+                        {{ item.title }}
+                      </div>
+                      <div class="articleCardContent">
+                        {{ item.content }}
+                      </div>
+                      <div class="articleCardTag">
+                        {{ item.date }}
+                      </div>
+                    </td>
+                    <td>
+                      <el-button
+                        v-if="isVisitor"
+                        @click="cancelFavorite(item.id)"
+                        >取消收藏</el-button
+                      >
+                    </td>
+                  </tr>
+                </table>
               </li>
             </ul>
           </div>
@@ -233,7 +248,7 @@ export default {
           pageSize: 8,
           data: [],
         },
-        resource: { load: false, page: 1, pageSize: 8, data: [] },
+        favorite: { load: false, page: 1, pageSize: 8, data: [] },
         follow: { load: false, page: 1, pageSize: 8, data: [] },
         fans: { load: false, page: 1, pageSize: 8, data: [] },
       },
@@ -244,6 +259,7 @@ export default {
   beforeMount() {
     this.loadInfo();
     this.loadArticle();
+    this.loadFavorite();
     this.loadFollow();
     this.loadFans();
   },
@@ -275,6 +291,18 @@ export default {
   },
 
   methods: {
+    cancelFavorite(id) {
+      this.$axios
+        .post("/article/deleteFavorite", {
+          articleId: id,
+        })
+        .then((res) => {
+          this.$notify({
+            message: res.message,
+            duration: 1000,
+          });
+        });
+    },
     cancelFollow(id) {
       this.$axios
         .post("/user/cancelFollow", {
@@ -340,6 +368,12 @@ export default {
           this.data.article.data = [];
           this.loadArticle();
           break;
+        case "favorite":
+          this.data.favorite.load = false;
+          this.data.favorite.page = 1;
+          this.data.favorite.data = [];
+          this.loadFavorite();
+          break;
         case "follow":
           this.data.follow.load = false;
           this.data.follow.page = 1;
@@ -379,7 +413,24 @@ export default {
           break;
       }
     },
-    loadResource() {},
+    loadFavorite() {
+      this.$axios
+        .post("/article/getFavorite", {
+          userId:
+            this.id && this.id != "null" ? this.id : localStorage.getItem("id"),
+          page: this.data.favorite.page,
+          pageSize: this.data.favorite.pageSize,
+        })
+        .then((res) => {
+          if (res.data.list.length > 0) {
+            this.data.favorite.page += 1;
+            this.data.favorite.data = this.data.favorite.data.concat(
+              res.data.list
+            );
+            this.data.favorite.load = true;
+          }
+        });
+    },
     loadFollow() {
       this.$axios
         .post("/user/getFollow", {
@@ -569,7 +620,7 @@ export default {
 	/* display: flex; */
 	margin: 10px;
 	padding: 10px 8px;
-	height: 100px;
+	height: 110px;
 
 	color: rgb(0, 0, 0);
 
@@ -591,10 +642,13 @@ export default {
 .articleCardTitle {
 	overflow: hidden;
 
-	max-width: 800px;
+	width: 100%;
+
+/* max-width: 800px; */
+	height: 28px;
 
 	font-size: 18px;
-	white-space: nowrap;
+	white-space: normal;
 	text-overflow: ellipsis;
 }
 
