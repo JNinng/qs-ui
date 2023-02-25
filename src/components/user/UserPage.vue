@@ -114,7 +114,7 @@
               <li
                 v-for="(item, index) in data.follow.data"
                 :key="index"
-                class="follow-infinite-list-item"
+                class="relation-infinite-list-item"
               >
                 <table style="width: 100%">
                   <tr>
@@ -161,15 +161,32 @@
               <li
                 v-for="(item, index) in data.fans.data"
                 :key="index"
-                class="infinite-list-item"
+                class="relation-infinite-list-item"
               >
-                <div class="articleCardTitle">
-                  {{ item.title }}
-                </div>
-                <div class="articleCardContent"></div>
-                <div class="articleCardTag">
-                  {{ item.date }}
-                </div>
+                <table style="width: 100%">
+                  <tr>
+                    <td style="width: 80px">
+                      <div class="relationHeadPortrait">
+                        <img
+                          :src="imgBaseUrl + item.headPortrait"
+                          @click="gotoUser(item.id)"
+                        />
+                      </div>
+                    </td>
+                    <td @click="gotoUser(item.id)">
+                      <div class="relationName">
+                        {{ item.name }}
+                      </div>
+                    </td>
+                    <td style="width: 80px">
+                      <div>
+                        <el-button @click="addFollow(item.id)"
+                          >添加关注</el-button
+                        >
+                      </div>
+                    </td>
+                  </tr>
+                </table>
               </li>
             </ul>
           </div>
@@ -203,7 +220,7 @@ export default {
       isVisitor: !(this.id != localStorage.getItem("id")),
       infoLoad: false,
       info: {},
-      activeName: "follow",
+      activeName: "article",
       count: 4,
       data: {
         article: {
@@ -357,7 +374,23 @@ export default {
           }
         });
     },
-    loadFans() {},
+    loadFans() {
+      this.$axios
+        .post("/user/getFans", {
+          id:
+            this.id && this.id != "null" ? this.id : localStorage.getItem("id"),
+          page: this.data.fans.page,
+          pageSize: this.data.fans.pageSize,
+        })
+        .then((res) => {
+          if (res.data.userList.length > 0) {
+            this.data.fans.page += 1;
+            this.data.fans.data = this.data.fans.data.concat(res.data.userList);
+            this.data.fans.userId = res.data.userId;
+            this.data.fans.load = true;
+          }
+        });
+    },
   },
 };
 </script>
@@ -565,7 +598,7 @@ export default {
 	color: #666;
 }
 
-.infinite-list .follow-infinite-list-item {
+.infinite-list .relation-infinite-list-item {
 	margin: 10px;
 	padding: 10px 8px;
 	height: 65px;
