@@ -25,11 +25,17 @@
             </div>
           </div>
           <div class="tag">
-            <span class="item">文章：{{ info.articleNumber }}</span>
+            <span class="item" @click="activeName = 'article'"
+              >文章：{{ info.articleNumber }}</span
+            >
             <el-divider id="divider" border-style="dashed" />
-            <span class="item">关注：{{ info.followNumber }}</span>
+            <span class="item" @click="activeName = 'follow'"
+              >关注：{{ info.followNumber }}</span
+            >
             <el-divider id="divider" border-style="dashed" />
-            <span class="item">粉丝：{{ info.fansNumber }}</span>
+            <span class="item" @click="activeName = 'fans'"
+              >粉丝：{{ info.fansNumber }}</span
+            >
             <el-divider id="divider" border-style="dashed" />
             <span>获得收藏：{{ info.getLikes }}</span>
             <el-divider id="divider" border-style="dashed" />
@@ -78,7 +84,7 @@
           </div>
           <div class="noData" v-else>暂无内容</div></el-tab-pane
         >
-        <el-tab-pane label="资源" name="resource">
+        <el-tab-pane label="收藏" name="resource">
           <div v-if="data.resource.load > 0">
             <ul
               v-infinite-scroll="loadResource"
@@ -518,7 +524,9 @@ export default {
 
 .userRight {
 	margin: 30px 58px 12px 2%;
-	max-width: 1200px;
+
+/* max-width: 1200px; */
+	width: 600px;
 
 /* height: calc(90vh - 59px); */
 	min-height: 406px;
