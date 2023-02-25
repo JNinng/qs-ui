@@ -25,13 +25,17 @@
             </div>
           </div>
           <div class="tag">
-            <span class="item">文章：{{ info.articleNumber }}</span>
+            <span class="item" @click="activeName = 'article'"
+              >文章：{{ info.articleNumber }}</span
+            >
             <el-divider id="divider" border-style="dashed" />
-            <span class="item">关注：{{ info.followNumber }}</span>
+            <span class="item" @click="activeName = 'follow'"
+              >关注：{{ info.followNumber }}</span
+            >
             <el-divider id="divider" border-style="dashed" />
-            <span class="item">粉丝：{{ info.fansNumber }}</span>
-            <el-divider id="divider" border-style="dashed" />
-            <span>获得收藏：{{ info.getLikes }}</span>
+            <span class="item" @click="activeName = 'fans'"
+              >粉丝：{{ info.fansNumber }}</span
+            >
             <el-divider id="divider" border-style="dashed" />
             <span>总访问：{{ info.pageViewNumber }}</span>
           </div>
@@ -48,7 +52,7 @@
         class="demo-tabs"
         v-model="activeName"
         type="border-card"
-        @tab-click="handleClick"
+        @tab-change="handleClick"
       >
         <el-tab-pane label="文章" name="article">
           <div v-if="data.article.load">
@@ -78,7 +82,7 @@
           </div>
           <div class="noData" v-else>暂无内容</div></el-tab-pane
         >
-        <el-tab-pane label="资源" name="resource">
+        <el-tab-pane label="收藏" name="resource">
           <div v-if="data.resource.load > 0">
             <ul
               v-infinite-scroll="loadResource"
@@ -114,15 +118,37 @@
               <li
                 v-for="(item, index) in data.follow.data"
                 :key="index"
-                class="infinite-list-item"
+                class="relation-infinite-list-item"
               >
-                <div class="articleCardTitle">
-                  {{ item.title }}
-                </div>
-                <div class="articleCardContent"></div>
-                <div class="articleCardTag">
-                  {{ item.date }}
-                </div>
+                <table style="width: 100%">
+                  <tr>
+                    <td style="width: 80px">
+                      <div class="relationHeadPortrait">
+                        <img
+                          :src="imgBaseUrl + item.headPortrait"
+                          @click="gotoUser(item.id)"
+                        />
+                      </div>
+                    </td>
+                    <td @click="gotoUser(item.id)">
+                      <div class="relationName">
+                        {{ item.name }}
+                      </div>
+                    </td>
+                    <td style="width: 80px">
+                      <div v-if="isVisitor">
+                        <el-button @click="cancelFollow(item.id)"
+                          >取消关注</el-button
+                        >
+                      </div>
+                      <div v-else>
+                        <el-button @click="addFollow(item.id)"
+                          >添加关注</el-button
+                        >
+                      </div>
+                    </td>
+                  </tr>
+                </table>
               </li>
             </ul>
           </div>
@@ -139,15 +165,32 @@
               <li
                 v-for="(item, index) in data.fans.data"
                 :key="index"
-                class="infinite-list-item"
+                class="relation-infinite-list-item"
               >
-                <div class="articleCardTitle">
-                  {{ item.title }}
-                </div>
-                <div class="articleCardContent"></div>
-                <div class="articleCardTag">
-                  {{ item.date }}
-                </div>
+                <table style="width: 100%">
+                  <tr>
+                    <td style="width: 80px">
+                      <div class="relationHeadPortrait">
+                        <img
+                          :src="imgBaseUrl + item.headPortrait"
+                          @click="gotoUser(item.id)"
+                        />
+                      </div>
+                    </td>
+                    <td @click="gotoUser(item.id)">
+                      <div class="relationName">
+                        {{ item.name }}
+                      </div>
+                    </td>
+                    <td style="width: 80px">
+                      <div>
+                        <el-button @click="addFollow(item.id)"
+                          >添加关注</el-button
+                        >
+                      </div>
+                    </td>
+                  </tr>
+                </table>
               </li>
             </ul>
           </div>
@@ -178,6 +221,7 @@ export default {
   data() {
     return {
       isVisible: true,
+      isVisitor: !(this.id != localStorage.getItem("id")),
       infoLoad: false,
       info: {},
       activeName: "article",
@@ -193,6 +237,7 @@ export default {
         follow: { load: false, page: 1, pageSize: 8, data: [] },
         fans: { load: false, page: 1, pageSize: 8, data: [] },
       },
+      imgBaseUrl: this.$axios.serverAddress + "/file/image/",
     };
   },
 
@@ -223,12 +268,48 @@ export default {
     );
   },
 
-  watch: {},
+  watch: {
+    id(newValue, oldValue) {
+      this.$router.go(0);
+    },
+  },
 
   methods: {
+    cancelFollow(id) {
+      this.$axios
+        .post("/user/cancelFollow", {
+          bUserId: id,
+        })
+        .then((res) => {
+          this.$notify({
+            message: res.message,
+            duration: 1000,
+          });
+        });
+    },
+    addFollow(id) {
+      this.$axios
+        .post("/user/follow", {
+          bUserId: id,
+        })
+        .then((res) => {
+          this.$notify({
+            message: res.message,
+            duration: 1000,
+          });
+        });
+    },
     gotoArticle(id) {
       this.$router.push({
         name: "mdView",
+        params: {
+          id: id,
+        },
+      });
+    },
+    gotoUser(id) {
+      this.$router.push({
+        name: "user",
         params: {
           id: id,
         },
@@ -242,7 +323,7 @@ export default {
       var that = this;
       this.$axios
         .post("/user/info", {
-          id: id_,
+          id: this.id,
         })
         .then((res) => {
           this.info = res.data;
@@ -251,7 +332,28 @@ export default {
           this.infoLoad = true;
         });
     },
-    handleClick() {},
+    handleClick(name) {
+      switch (name) {
+        case "article":
+          this.data.article.load = false;
+          this.data.article.page = 1;
+          this.data.article.data = [];
+          this.loadArticle();
+          break;
+        case "follow":
+          this.data.follow.load = false;
+          this.data.follow.page = 1;
+          this.data.follow.data = [];
+          this.loadFollow();
+          break;
+        case "fans":
+          this.data.fans.load = false;
+          this.data.fans.page = 1;
+          this.data.fans.data = [];
+          this.loadFans();
+          break;
+      }
+    },
     loadArticle() {
       var mode = "article";
       switch (mode) {
@@ -278,8 +380,42 @@ export default {
       }
     },
     loadResource() {},
-    loadFollow() {},
-    loadFans() {},
+    loadFollow() {
+      this.$axios
+        .post("/user/getFollow", {
+          id:
+            this.id && this.id != "null" ? this.id : localStorage.getItem("id"),
+          page: this.data.follow.page,
+          pageSize: this.data.follow.pageSize,
+        })
+        .then((res) => {
+          if (res.data.userList.length > 0) {
+            this.data.follow.page += 1;
+            this.data.follow.data = this.data.follow.data.concat(
+              res.data.userList
+            );
+            this.data.follow.userId = res.data.userId;
+            this.data.follow.load = true;
+          }
+        });
+    },
+    loadFans() {
+      this.$axios
+        .post("/user/getFans", {
+          id:
+            this.id && this.id != "null" ? this.id : localStorage.getItem("id"),
+          page: this.data.fans.page,
+          pageSize: this.data.fans.pageSize,
+        })
+        .then((res) => {
+          if (res.data.userList.length > 0) {
+            this.data.fans.page += 1;
+            this.data.fans.data = this.data.fans.data.concat(res.data.userList);
+            this.data.fans.userId = res.data.userId;
+            this.data.fans.load = true;
+          }
+        });
+    },
   },
 };
 </script>
@@ -407,7 +543,9 @@ export default {
 
 .userRight {
 	margin: 30px 58px 12px 2%;
-	max-width: 1200px;
+
+/* max-width: 1200px; */
+	width: 600px;
 
 /* height: calc(90vh - 59px); */
 	min-height: 406px;
@@ -485,6 +623,37 @@ export default {
 	font-size: 14px;
 
 	color: #666;
+}
+
+.infinite-list .relation-infinite-list-item {
+	margin: 10px;
+	padding: 10px 8px;
+	height: 65px;
+
+	color: rgb(0, 0, 0);
+
+	box-shadow: rgba(9, 30, 66, .25) 0 1px 1px, rgba(9, 30, 66, .13) 0 0 1px 1px;
+
+	cursor: pointer;
+}
+
+.relationHeadPortrait >>> img {
+	float: left;
+
+	border-radius: 50%;
+	width: 60px;
+	height: 60px;
+
+	box-shadow: rgba(0, 0, 0, .8) 0 0 2px 4px,
+	rgba(255, 255, 255, .8) 0 0 1px 6px;
+
+	align-items: center;
+}
+
+.relationName {
+	float: left;
+
+	font-size: 20px;
 }
 
 </style>

@@ -31,12 +31,10 @@ const routes = [
 		}),
 	},
 	{
-		path: "/user",
+		path: "/user/:id",
 		name: "user",
 		component: UserPage,
-		props: (route) => ({
-			id: route.query.id,
-		}),
+		props: true,
 	},
 	{
 		path: "/admin",

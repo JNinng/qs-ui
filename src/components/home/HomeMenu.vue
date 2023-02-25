@@ -132,6 +132,9 @@ export default {
     hoverHeadPortrait() {
       this.$router.push({
         name: "user",
+        params: {
+          id: localStorage.getItem("id"),
+        },
       });
     },
     getHeadPortrait() {
