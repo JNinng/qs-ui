@@ -55,9 +55,10 @@ const store = new Vuex.Store({
 			isVisible: true,
 			toLogin: false,
 			user: {
-				name: "restfulToolkitX",
-				password: "restfulToolkitX",
+				name: "",
+				password: "",
 			},
+			info: {},
 		},
 	},
 });

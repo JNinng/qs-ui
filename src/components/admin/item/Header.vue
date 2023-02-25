@@ -67,7 +67,9 @@ export default {
         case "0":
           if (this.$store.state.config.login) {
             this.$axios.get("/user/logout", {}).then((res) => {
-              console.log("test 1 res:" + res);
+              localStorage.removeItem("id");
+              localStorage.removeItem("token");
+              localStorage.removeItem("tokenValue");
               this.$store.state.config.login = false;
               this.$store.state.config.noLogin = true;
             });
