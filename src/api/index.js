@@ -72,6 +72,7 @@ export default {
 				result = res.data.data;
 				for (let i = 0; i < result.length; i++) {
 					result[i].url = that.serverAddress + result[i].url;
+					result[i].title = "";
 				}
 			})
 			.catch((err) => {
