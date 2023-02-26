@@ -338,13 +338,14 @@ export default {
       window.open(routeData.href, "_blank");
     },
     gotoUser(id) {
-      let routeData = this.$router.resolve({
+      // let routeData =
+      this.$router.push({
         name: "user",
         params: {
           id: id,
         },
       });
-      window.open(routeData.href, "_blank");
+      // window.open(routeData.href, "_blank");
     },
     loadInfo() {
       var id_;
