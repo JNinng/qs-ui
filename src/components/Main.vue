@@ -208,7 +208,11 @@ export default {
 
   watch: {
     "$route.path"(newValue, oldValue) {
-      if (newValue != "/articleManagement") {
+      if (
+        newValue != "/articleManagement" &&
+        newValue != "/commentManagement" &&
+        newValue != "/systemManagement"
+      ) {
         this.$store.state.config.isVisible = true;
         this.$store.state.config.adminShow = false;
       }

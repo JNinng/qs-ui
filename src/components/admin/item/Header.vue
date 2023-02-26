@@ -5,6 +5,7 @@
       mode="horizontal"
       :ellipsis="false"
       @select="handleSelect"
+      v-if="menuShow"
     >
       <el-menu-item index="0"
         ><span class="sidebar-switch" @click="open = !open">
@@ -46,11 +47,13 @@ export default {
   data() {
     return {
       info: {},
+      menuShow: false,
     };
   },
 
   beforeMount() {
     this.getHeadPortrait();
+    this.checkLogin();
   },
 
   mounted() {},
@@ -79,39 +82,12 @@ export default {
               this.$store.state.config.noLogin = true;
             });
           } else {
-            // this.$axios
-            //   .post("/user/login", {
-            //     name: "restfulToolkitX",
-            //     password: "restfulToolkitX",
-            //   })
-            //   .then((res) => {
-            //     const token = res.data.token;
-            //     const id = res.data.id;
-            //     console.log("test 1 login:" + res);
-            //     localStorage.setItem("token", "token");
-            //     localStorage.setItem("tokenValue", token);
-            //     localStorage.setItem("id", res.data.id);
-            //     this.$store.state.config.id = id;
-            //     this.$store.state.config.token = token;
-            //     this.$store.state.config.login = true;
-            //     this.$store.state.config.noLogin = false;
-            //   });
+            this.$store.state.config.toLogin = true;
           }
           break;
         case "1":
           console.log("test 2");
-          this.$axios
-            .get("/user/checkLogin", {
-              id: localStorage.getItem("id"),
-            })
-            .then((res) => {
-              if ((res.code = "200")) {
-                this.$notify({
-                  message: res.data,
-                  duration: 800,
-                });
-              }
-            });
+          this.checkLogin();
           break;
         case "2":
           this.$router.replace("/");
@@ -127,6 +103,21 @@ export default {
             this.$axios.serverAddress + "/file/image/" + res.data.headPortrait;
         });
       }
+    },
+    checkLogin() {
+      this.$axios
+        .get("/user/checkLogin", {
+          id: localStorage.getItem("id"),
+        })
+        .then((res) => {
+          if ((res.code = "200")) {
+            this.menuShow = true;
+            this.$notify({
+              message: res.data,
+              duration: 800,
+            });
+          }
+        });
     },
   },
 };
