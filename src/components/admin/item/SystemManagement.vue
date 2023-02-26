@@ -358,7 +358,7 @@ export default {
       operationRow: {},
       infoLoad: false,
       addCodeFlag: false,
-      activeName: ["1"],
+      activeName: ["0"],
       headPortrait: "",
       info: {
         articleNumber: 46,
