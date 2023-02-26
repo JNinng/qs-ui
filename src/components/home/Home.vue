@@ -149,12 +149,13 @@ export default {
         });
     },
     goItem(id) {
-      this.$router.push({
+      let routeData = this.$router.resolve({
         name: "mdView",
         params: {
           id: id,
         },
       });
+      window.open(routeData.href, "_blank");
     },
     loadHot() {
       this.$axios.post("/article/hot", {}).then((res) => {
