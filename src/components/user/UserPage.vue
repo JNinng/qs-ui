@@ -94,6 +94,7 @@
                 v-for="(item, index) in data.favorite.data"
                 :key="index"
                 class="infinite-list-item"
+                @click="gotoArticle(item.id)"
               >
                 <table>
                   <tr>
@@ -328,20 +329,23 @@ export default {
         });
     },
     gotoArticle(id) {
-      this.$router.push({
+      let routeData = this.$router.resolve({
         name: "mdView",
         params: {
           id: id,
         },
       });
+      window.open(routeData.href, "_blank");
     },
     gotoUser(id) {
+      // let routeData =
       this.$router.push({
         name: "user",
         params: {
           id: id,
         },
       });
+      // window.open(routeData.href, "_blank");
     },
     loadInfo() {
       var id_;

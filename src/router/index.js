@@ -40,7 +40,7 @@ const routes = [
 		path: "/admin",
 		name: "admin",
 		component: Admin,
-		redirect: "articleManagement",
+		redirect: "/articleManagement",
 		children: [
 			{
 				path: "/articleManagement",
@@ -101,4 +101,12 @@ const router = createRouter({
 	routes,
 });
 
+/** 解决跳转重复路由报错问题 */
+// const routerPush = router.push;
+// router.push = (path) => {
+// 	// 判断下当前路由是否就是要跳转的路由
+// 	console.log(path);
+// 	console.log(router.currentRoute.value.fullPath);
+// 	return routerPush(path);
+// };
 export default router;

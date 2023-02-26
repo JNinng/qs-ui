@@ -14,15 +14,6 @@
       <el-menu-item index="/timeline">Timeline</el-menu-item>
       <el-menu-item index="/tag">Tag</el-menu-item>
       <el-menu-item index="/about">About</el-menu-item>
-      <!-- <div class="flex-grow" /> -->
-      <el-menu-item index="/admin">
-        <el-button
-          color="#ffffff"
-          style="background-color: white; border-style: none"
-          icon="User"
-        >
-        </el-button>
-      </el-menu-item>
     </el-menu>
     <div class="flex-grow" />
     <div class="right">
@@ -101,6 +92,10 @@ export default {
           name: "个人空间",
         },
         {
+          id: 2,
+          name: "设置",
+        },
+        {
           id: 0,
           name: "退出登录",
         },
@@ -165,9 +160,6 @@ export default {
         case "return":
           this.$router.go(-1);
           break;
-        case "/admin":
-          this.$router.push("/admin");
-          break;
       }
     },
     handleScroll: function () {
@@ -197,6 +189,9 @@ export default {
         case 1:
           this.hoverHeadPortrait();
           break;
+        case 2:
+          this.$router.push("/admin");
+          break;
       }
     },
   },
@@ -219,67 +214,66 @@ export default {
 
 <style>
 .header {
-	display: flex;
+  display: flex;
 
-	border-bottom: solid 1px #dcdfe6;
+  border-bottom: solid 1px #dcdfe6;
 
-	background-color: white;
+  background-color: white;
 }
 
 #searchInput:focus {
-	width: 300px;
+  width: 300px;
 }
 
 .login {
-	display: table-cell;
+  display: table-cell;
 
-	padding-right: 16px;
-	width: 59px;
-	height: 59px;
+  padding-right: 16px;
+  width: 59px;
+  height: 59px;
 
-	text-align: center;
-	vertical-align: middle;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .login img {
-	overflow: hidden;
+  overflow: hidden;
 
-	border-radius: 50%;
-	width: 40px;
-	height: 40px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
 
-	transition: .2s;
+  transition: 0.2s;
 }
 
 .login img:hover {
-	width: 50px;
-	height: 50px;
+  width: 50px;
+  height: 50px;
 
-	background-color: rgb(202, 202, 202);
+  background-color: rgb(202, 202, 202);
 }
 
 .minMenu {
-	text-align: right;
+  text-align: right;
 
-	background-color: transparent;
+  background-color: transparent;
 
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .left {
-	border: none;
+  border: none;
 }
 
 .right {
-	display: flex;
+  display: flex;
 }
 
 .aSearch {
-	transform: translate3d(-20px, 14px, 0);
+  transform: translate3d(-20px, 14px, 0);
 }
 
 .flex-grow {
-	flex-grow: 1;
+  flex-grow: 1;
 }
-
 </style>
