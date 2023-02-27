@@ -23,7 +23,11 @@
           <div class="infoContent">
             <div class="info" v-if="infoLoad">
               <div class="infoHeader">
-                <img :src="info.headPortrait" @click="goItem(info.id)" />
+                <img
+                  class="isClick"
+                  :src="info.headPortrait"
+                  @click="goItem(info.id)"
+                />
                 <div>
                   <div>{{ info.nickname }}</div>
                 </div>
@@ -416,6 +420,10 @@ export default {
 	background-color: white;
 
 	box-shadow: rgba(0, 0, 0, .25) 0 14px 28px, rgba(0, 0, 0, .22) 0 10px 10px;
+}
+
+.isClick {
+	cursor: pointer;
 }
 
 </style>
