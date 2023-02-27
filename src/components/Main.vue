@@ -199,6 +199,7 @@ export default {
   },
 
   beforeMount() {
+    this.loadInfo();
     this.scrollHeight = window.innerHeight + "px";
     window.onresize = () => {
       // 窗口大小改变,重新设置滚动条高度
@@ -290,17 +291,10 @@ export default {
             localStorage.setItem("id", res.data.id);
             this.$store.state.config.id = id;
             this.$store.state.config.token = token;
-            this.$axios.post("/user/info", { id: id }).then((res) => {
-              this.$store.state.config.info = res.data;
-              this.$store.state.config.info.headPortrait =
-                this.$axios.serverAddress +
-                "/file/image/" +
-                res.data.headPortrait;
-              this.$store.state.config.login = true;
-              this.$store.state.config.noLogin = false;
-              this.$store.state.config.toLogin = false;
-              this.$router.go(0);
-            });
+            this.$store.state.config.login = true;
+            this.$store.state.config.noLogin = false;
+            this.$store.state.config.toLogin = false;
+            this.$router.go(0);
           } else {
             this.$notify({
               message: res.message,
@@ -308,6 +302,17 @@ export default {
             });
           }
         });
+    },
+    loadInfo() {
+      var id = localStorage.getItem("id");
+      if (id != undefined && id != "null") {
+        this.$axios.post("/user/info", { id: id }).then((res) => {
+          console.log("login:" + JSON.stringify(res.data));
+          this.$store.state.config.info = res.data;
+          this.$store.state.config.info.headPortrait =
+            this.$axios.serverAddress + "/file/image/" + res.data.headPortrait;
+        });
+      }
     },
     scroll(value) {
       const scrollTop = value.scrollTop;
