@@ -94,11 +94,10 @@
                 v-for="(item, index) in data.favorite.data"
                 :key="index"
                 class="infinite-list-item"
-                @click="gotoArticle(item.id)"
               >
                 <table>
                   <tr>
-                    <td>
+                    <td @click="gotoArticle(item.id)">
                       <div class="articleCardTitle">
                         {{ item.title }}
                       </div>
