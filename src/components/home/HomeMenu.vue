@@ -10,10 +10,9 @@
       text-color="#000000"
       @select="handleSelect"
     >
-      <el-menu-item index="/">Home</el-menu-item>
-      <el-menu-item index="/timeline">Timeline</el-menu-item>
-      <el-menu-item index="/tag">Tag</el-menu-item>
-      <el-menu-item index="/about">About</el-menu-item>
+      <el-menu-item index="/">主页</el-menu-item>
+      <el-menu-item index="/timeline">探索</el-menu-item>
+      <el-menu-item index="/tag">榜单</el-menu-item>
     </el-menu>
     <div class="flex-grow" />
     <div class="right">
@@ -214,66 +213,67 @@ export default {
 
 <style>
 .header {
-  display: flex;
+	display: flex;
 
-  border-bottom: solid 1px #dcdfe6;
+	border-bottom: solid 1px #dcdfe6;
 
-  background-color: white;
+	background-color: white;
 }
 
 #searchInput:focus {
-  width: 300px;
+	width: 300px;
 }
 
 .login {
-  display: table-cell;
+	display: table-cell;
 
-  padding-right: 16px;
-  width: 59px;
-  height: 59px;
+	padding-right: 16px;
+	width: 59px;
+	height: 59px;
 
-  text-align: center;
-  vertical-align: middle;
+	text-align: center;
+	vertical-align: middle;
 }
 
 .login img {
-  overflow: hidden;
+	overflow: hidden;
 
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
 
-  transition: 0.2s;
+	transition: .2s;
 }
 
 .login img:hover {
-  width: 50px;
-  height: 50px;
+	width: 50px;
+	height: 50px;
 
-  background-color: rgb(202, 202, 202);
+	background-color: rgb(202, 202, 202);
 }
 
 .minMenu {
-  text-align: right;
+	text-align: right;
 
-  background-color: transparent;
+	background-color: transparent;
 
-  cursor: pointer;
+	cursor: pointer;
 }
 
 .left {
-  border: none;
+	border: none;
 }
 
 .right {
-  display: flex;
+	display: flex;
 }
 
 .aSearch {
-  transform: translate3d(-20px, 14px, 0);
+	transform: translate3d(-20px, 14px, 0);
 }
 
 .flex-grow {
-  flex-grow: 1;
+	flex-grow: 1;
 }
+
 </style>
