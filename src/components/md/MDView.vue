@@ -59,7 +59,7 @@
                 <td></td>
                 <td>
                   <el-tooltip placement="top-start" content="关注">
-                    <el-button>
+                    <el-button @click="submitFollow">
                       <el-icon size="20px"><Plus /></el-icon>
                     </el-button>
                   </el-tooltip>
@@ -81,7 +81,7 @@
                 </td>
                 <td>
                   <el-tooltip placement="top-start" content="收藏">
-                    <el-button>
+                    <el-button @click="submitFavorite">
                       <el-icon size="20px"><Star /></el-icon>
                     </el-button>
                   </el-tooltip>
@@ -158,6 +158,34 @@ export default {
     this.addBrowseRecord(); // 上送后台接口，将浏览时长等信息传到后台，离开当前路由后调用
   },
   methods: {
+    submitFavorite() {
+      if (this.$store.state.config.login) {
+        this.$axios
+          .post("/article/setFavorite", {
+            articleId: this.article.id,
+          })
+          .then((res) => {
+            this.$notify({
+              message: res.message,
+              duration: 1200,
+            });
+          });
+      }
+    },
+    submitFollow() {
+      if (this.$store.state.config.login) {
+        this.$axios
+          .post("/user/follow", {
+            bUserId: this.article.userId,
+          })
+          .then((res) => {
+            this.$notify({
+              message: res.message,
+              duration: 1200,
+            });
+          });
+      }
+    },
     goItem(id) {
       let routeData = this.$router.resolve({
         name: "user",
