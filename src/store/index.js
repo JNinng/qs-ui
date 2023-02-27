@@ -58,6 +58,10 @@ const store = new Vuex.Store({
 				name: "",
 				password: "",
 			},
+			transfer: {
+				link: "",
+				code: "",
+			},
 			info: {},
 		},
 	},

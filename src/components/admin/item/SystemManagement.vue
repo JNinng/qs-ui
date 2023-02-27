@@ -170,6 +170,16 @@
               </tr>
             </table>
             <el-divider content-position="left">授权密码设置</el-divider>
+            <div style="padding: 4px 4px 12px 4px; font-size: 16px">
+              <span>您的接收链接：</span>
+              {{ receiveLink }}
+              <span>
+                &nbsp;
+                <el-icon @click="copyLink" class="isClick" size="18px"
+                  ><CopyDocument
+                /></el-icon>
+              </span>
+            </div>
             <el-table
               :data="authorizationData"
               :default-sort="{ prop: 'date', order: 'descending' }"
@@ -330,7 +340,7 @@
 </template>
 
 <script>
-import moment from "moment";
+import moment, { duration } from "moment";
 
 export default {
   name: "SystemManagement",
@@ -383,6 +393,7 @@ export default {
         newV: "",
         newV1: "",
       },
+      receiveLink: "",
       pwdStatus: false,
       uploadInfo: false,
       token: { token: localStorage.getItem("tokenValue") },
@@ -423,6 +434,18 @@ export default {
   },
 
   methods: {
+    copyLink() {
+      var tInput = document.createElement("input");
+      tInput.value = this.receiveLink;
+      document.body.appendChild(tInput);
+      tInput.select();
+      document.execCommand("copy");
+      this.$notify({
+        message: "复制成功！",
+        duration: 1000,
+      });
+      document.body.removeChild(tInput);
+    },
     addCodeSubmit() {
       this.$axios
         .post("/user/setAuthorization", {
@@ -561,6 +584,8 @@ export default {
           Object.assign(this.info, res.data);
           this.headPortrait =
             this.$axios.serverAddress + "/file/image/" + res.data.headPortrait;
+          this.receiveLink =
+            this.$axios.serverAddress + "/transmission/receive/" + res.data.id;
           this.infoLoad = true;
         })
         .catch((err) => {
@@ -652,6 +677,10 @@ export default {
 
 	margin-right: 22px;
 	padding: 8px 0;
+}
+
+.isClick {
+	cursor: pointer;
 }
 
 </style>

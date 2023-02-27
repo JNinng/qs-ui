@@ -67,16 +67,34 @@
                 <td>
                   <el-popover
                     placement="bottom"
-                    :width="200"
+                    width="320px"
                     trigger="hover"
                     content=""
                   >
                     <template #reference>
-                      <el-button>
+                      <el-button @click="submitTransfer">
                         <el-icon size="20px"><Switch /></el-icon>
                       </el-button>
                     </template>
-                    还可
+                    <table style="width: 100%">
+                      <tr>
+                        <td>
+                          <el-input
+                            v-model="this.$store.state.config.transfer.link"
+                          >
+                            <template #prepend>链接</template></el-input
+                          >
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <el-input
+                            v-model="this.$store.state.config.transfer.code"
+                            ><template #prepend>授权</template></el-input
+                          >
+                        </td>
+                      </tr>
+                    </table>
                   </el-popover>
                 </td>
                 <td>
@@ -158,6 +176,30 @@ export default {
     this.addBrowseRecord(); // 上送后台接口，将浏览时长等信息传到后台，离开当前路由后调用
   },
   methods: {
+    submitTransfer() {
+      if (
+        this.$store.state.config.transfer.link != "" &&
+        this.$store.state.config.transfer.code != ""
+      ) {
+        this.$axios
+          .post("/transmission/push", {
+            authorizationCode: this.$store.state.config.transfer.code,
+            link: this.$store.state.config.transfer.link,
+            resourceId: this.article.id,
+          })
+          .then((res) => {
+            this.$notify({
+              message: res.message,
+              duration: 1000,
+            });
+          });
+      } else {
+        this.$notify({
+          message: "请确认链接和授权！",
+          duration: 1000,
+        });
+      }
+    },
     submitFavorite() {
       if (this.$store.state.config.login) {
         this.$axios
