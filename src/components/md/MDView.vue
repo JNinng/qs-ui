@@ -68,11 +68,11 @@
                   <el-popover
                     placement="bottom"
                     width="320px"
-                    trigger="hover"
+                    trigger="click"
                     content=""
                   >
                     <template #reference>
-                      <el-button @click="submitTransfer">
+                      <el-button>
                         <el-icon size="20px"><Switch /></el-icon>
                       </el-button>
                     </template>
@@ -92,6 +92,15 @@
                             v-model="this.$store.state.config.transfer.code"
                             ><template #prepend>授权</template></el-input
                           >
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="text-align: right">
+                          <el-button>
+                            <el-icon size="20px" @click="submitTransfer"
+                              ><Promotion
+                            /></el-icon>
+                          </el-button>
                         </td>
                       </tr>
                     </table>
