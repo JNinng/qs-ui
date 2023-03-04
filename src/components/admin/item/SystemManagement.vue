@@ -219,94 +219,336 @@
             <template #title>
               <h3>其他</h3>
             </template>
-            <el-table
-              :data="tableData"
-              :default-sort="{ prop: 'date', order: 'descending' }"
-              stripe
-              border
-              style="width: 100%"
-              max-height="80vh"
-              :v-if="pageListLoad"
-            >
-              <el-table-column prop="id" label="ID" sortable width="80" />
-              <el-table-column prop="key" label="Key" sortable width="200">
-                <template #default="scope">
-                  <span v-show="!scope.row.edit">{{ scope.row.key }}</span>
-                  <el-input
-                    v-show="scope.row.edit"
-                    v-model="operationRow.key"
-                  ></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column prop="value" label="Value" sortable width="110">
-                <template #default="scope">
-                  <span v-show="!scope.row.edit">{{ scope.row.value }}</span>
-                  <el-input
-                    v-show="scope.row.edit"
-                    v-model="operationRow.value"
-                  ></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column prop="info" label="Info" sortable width="160">
-                <template #default="scope">
-                  <span v-show="!scope.row.edit">{{ scope.row.info }}</span>
-                  <el-input
-                    v-show="scope.row.edit"
-                    v-model="operationRow.info"
-                  ></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column
-                prop="defaultValue"
-                label="Default"
-                sortable
-                width="200"
+            <div v-if="amendmentLoad">
+              <el-divider content-position="left">资源校正</el-divider>
+              <el-table
+                :data="amendment.amendment.list"
+                :default-sort="{ prop: 'date', order: 'descending' }"
+                stripe
+                border
+                style="width: 100%"
+                max-height="80vh"
+                :v-if="pageListLoad"
               >
-                <template #default="scope">
-                  <span v-show="!scope.row.edit">{{
-                    scope.row.defaultValue
-                  }}</span>
-                  <el-input
-                    v-show="scope.row.edit"
-                    v-model="operationRow.defaultValue"
-                  ></el-input>
-                </template>
-              </el-table-column>
-              <el-table-column fixed="right" label="Operations" width="120">
-                <template #default="scope">
-                  <el-tooltip content="编辑" placement="top">
+                <el-table-column
+                  prop="createTime"
+                  label="CreateTime"
+                  sortable
+                  fixed="left"
+                  width="140"
+                >
+                  <template #default="scope">
+                    <span>{{ dateFormat(scope.row.createTime) }}</span>
+                    <el-input
+                      v-show="scope.row.edit"
+                      v-model="operationRow.createTime"
+                      type="date"
+                    ></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="articleId" label="资源 id">
+                  <template #default="scope">
+                    {{ scope.row.articleId }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="dispose" label="处理信息">
+                  <template #default="scope">
+                    {{ scope.row.dispose }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="type" label="类型" sortable>
+                  <template #default="scope">
+                    {{ scope.row.type }}
+                  </template>
+                </el-table-column>
+                <el-table-column prop="info" label="备注">
+                  <template #default="scope">
+                    {{ scope.row.info }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="updateTime"
+                  label="UpdateTime"
+                  sortable
+                  width="140"
+                >
+                  <template #default="scope">
+                    <span>{{ dateFormat(scope.row.updateTime) }}</span>
+                    <el-input
+                      v-show="scope.row.edit"
+                      v-model="operationRow.updateTime"
+                      type="date"
+                    ></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed="right" width="80">
+                  <template #default="scope">
                     <el-button
-                      v-show="!scope.row.edit"
                       type="primary"
-                      size="small"
-                      icon="Edit"
-                      @click="handleEditClick(scope.row)"
+                      @click="amendmentUpdate(scope.row)"
                     >
+                      <el-icon><Edit /></el-icon>
                     </el-button>
-                  </el-tooltip>
-                  <el-tooltip content="保存" placement="top">
+                  </template>
+                </el-table-column>
+              </el-table>
+              <el-dialog
+                v-model="updateAmendmentFlag"
+                :title="updateAmendment.info"
+                fullscreen="true"
+                destroy-on-close="true"
+              >
+                <div>
+                  <table style="width: 1024px">
+                    <tr>
+                      <td>
+                        <el-input v-model="countValue" placeholder="修正值" />
+                      </td>
+                      <td>
+                        <el-icon
+                          class="amendmentSubmit"
+                          size="24px"
+                          @click="submitAmendment"
+                          ><Promotion
+                        /></el-icon>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <el-radio-group
+                          v-model="amendmentIndex"
+                          style="width: 100%"
+                        >
+                          <el-table
+                            :data="updateArticleList"
+                            :default-sort="{
+                              prop: 'date',
+                              order: 'descending',
+                            }"
+                            stripe
+                            border
+                            style="width: 1024px"
+                          >
+                            <el-table-column
+                              prop="id"
+                              label="ID"
+                              sortable
+                              width="110"
+                            />
+                            <el-table-column
+                              prop="userId"
+                              label="UserID"
+                              sortable
+                              width="110"
+                            />
+                            <el-table-column
+                              fixed="left"
+                              prop="title"
+                              label="title"
+                              show-overflow-tooltip
+                              sortable
+                              width="200"
+                            >
+                              <template #default="scope">
+                                <span
+                                  style="cursor: pointer"
+                                  @click="goItem(scope.row.id)"
+                                  >{{ scope.row.title }}</span
+                                >
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                              prop="likeNum"
+                              label="LikeNum"
+                              sortable
+                              width="110"
+                            >
+                              <template #default="scope">
+                                <span>{{ scope.row.likeNum }}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                              prop="pageView"
+                              label="PageView"
+                              sortable
+                              width="110"
+                            >
+                              <template #default="scope">
+                                <span>{{ scope.row.pageView }}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column prop="ip" label="IP" width="110">
+                              <template #default="scope">
+                                <span>{{ scope.row.ip }}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                              prop="site"
+                              label="Site"
+                              width="80"
+                            >
+                              <template #default="scope">
+                                <span>{{ scope.row.site }}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                              prop="createTime"
+                              label="CreateTime"
+                              sortable
+                            >
+                              <template #default="scope">
+                                <span>{{
+                                  dateFormat(scope.row.createTime)
+                                }}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                              prop="updateTime"
+                              label="UpdateTime"
+                              sortable
+                              width="180"
+                            >
+                              <template #default="scope">
+                                <span>{{
+                                  dateFormat(scope.row.updateTime)
+                                }}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                              prop="stick"
+                              label="Stick"
+                              sortable
+                              width="90"
+                            >
+                              <template #default="scope">
+                                <span>{{ scope.row.stick }}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                              prop="stick"
+                              label="Option"
+                              sortable
+                              fixed="right"
+                              width="120"
+                            >
+                              <template #default="scope">
+                                <el-radio :label="scope.row.id" size="large"
+                                  >Option</el-radio
+                                >
+                              </template>
+                            </el-table-column>
+                          </el-table>
+                        </el-radio-group>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <template #footer>
+                  <div style="clear: both"></div>
+                  <span class="dialog-footer">
+                    <el-button @click="updateAmendmentFlag = false"
+                      >返回管理</el-button
+                    >
+                  </span>
+                </template>
+              </el-dialog>
+            </div>
+            <el-divider content-position="left">map 配置</el-divider>
+            <div>
+              <el-table
+                :data="tableData"
+                :default-sort="{ prop: 'date', order: 'descending' }"
+                stripe
+                border
+                style="width: 100%"
+                max-height="80vh"
+                :v-if="pageListLoad"
+              >
+                <el-table-column prop="id" label="ID" sortable width="80" />
+                <el-table-column prop="key" label="Key" sortable width="200">
+                  <template #default="scope">
+                    <span v-show="!scope.row.edit">{{ scope.row.key }}</span>
+                    <el-input
+                      v-show="scope.row.edit"
+                      v-model="operationRow.key"
+                    ></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="value"
+                  label="Value"
+                  sortable
+                  width="110"
+                >
+                  <template #default="scope">
+                    <span v-show="!scope.row.edit">{{ scope.row.value }}</span>
+                    <el-input
+                      v-show="scope.row.edit"
+                      v-model="operationRow.value"
+                    ></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column prop="info" label="Info" sortable width="160">
+                  <template #default="scope">
+                    <span v-show="!scope.row.edit">{{ scope.row.info }}</span>
+                    <el-input
+                      v-show="scope.row.edit"
+                      v-model="operationRow.info"
+                    ></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  prop="defaultValue"
+                  label="Default"
+                  sortable
+                  width="200"
+                >
+                  <template #default="scope">
+                    <span v-show="!scope.row.edit">{{
+                      scope.row.defaultValue
+                    }}</span>
+                    <el-input
+                      v-show="scope.row.edit"
+                      v-model="operationRow.defaultValue"
+                    ></el-input>
+                  </template>
+                </el-table-column>
+                <el-table-column fixed="right" label="Operations" width="120">
+                  <template #default="scope">
+                    <el-tooltip content="编辑" placement="top">
+                      <el-button
+                        v-show="!scope.row.edit"
+                        type="primary"
+                        size="small"
+                        icon="Edit"
+                        @click="handleEditClick(scope.row)"
+                      >
+                      </el-button>
+                    </el-tooltip>
+                    <el-tooltip content="保存" placement="top">
+                      <el-button
+                        v-show="scope.row.edit"
+                        type="success"
+                        size="small"
+                        icon="Select"
+                        @click="save(scope.row)"
+                      >
+                      </el-button>
+                    </el-tooltip>
+                    <!-- <el-tooltip content="取消" placement="top"> -->
                     <el-button
                       v-show="scope.row.edit"
-                      type="success"
+                      type="info"
                       size="small"
-                      icon="Select"
-                      @click="save(scope.row)"
+                      icon="CloseBold"
+                      @click="cancel(scope.row)"
                     >
                     </el-button>
-                  </el-tooltip>
-                  <!-- <el-tooltip content="取消" placement="top"> -->
-                  <el-button
-                    v-show="scope.row.edit"
-                    type="info"
-                    size="small"
-                    icon="CloseBold"
-                    @click="cancel(scope.row)"
-                  >
-                  </el-button>
-                  <!-- </el-tooltip> -->
-                </template>
-              </el-table-column>
-            </el-table>
+                    <!-- </el-tooltip> -->
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
           </el-collapse-item>
         </el-collapse>
       </div>
@@ -353,6 +595,7 @@ export default {
 
   beforeMount() {
     this.loadInfo();
+    this.loadAmendment();
     this.loadData();
     this.loadAuthorzationData();
   },
@@ -368,7 +611,7 @@ export default {
       operationRow: {},
       infoLoad: false,
       addCodeFlag: false,
-      activeName: ["0"],
+      activeName: ["2"],
       headPortrait: "",
       info: {
         articleNumber: 46,
@@ -397,6 +640,16 @@ export default {
       pwdStatus: false,
       uploadInfo: false,
       token: { token: localStorage.getItem("tokenValue") },
+      amendment: {
+        page: 1,
+        pageSize: 8,
+      },
+      updateAmendment: {},
+      updateArticleList: [],
+      updateAmendmentFlag: false,
+      amendmentLoad: false,
+      amendmentIndex: "",
+      countValue: 100,
     };
   },
 
@@ -434,6 +687,35 @@ export default {
   },
 
   methods: {
+    submitAmendment() {
+      this.$axios
+        .post("/article/amendment", {
+          id: this.updateAmendment.id,
+          articleId: this.amendmentIndex,
+          mode: 1,
+          value: this.countValue,
+          info: " ",
+        })
+        .then((res) => {
+          this.$notify({
+            message: res.message,
+            duration: 1000,
+          });
+        });
+    },
+    amendmentUpdate(row) {
+      this.updateAmendment = row;
+      this.updateAmendmentFlag = true;
+      var list = this.updateAmendment.articleId.split(",");
+      for (var i = 0; i < list.length; i++) {
+        this.$axios.get("/article/info/" + list[i], {}).then((res) => {
+          if (res.code == "200") {
+            this.updateArticleList.push(res.data);
+          }
+        });
+      }
+      this.amendmentIndex = list[0];
+    },
     copyLink() {
       var tInput = document.createElement("input");
       tInput.value = this.receiveLink;
@@ -608,6 +890,37 @@ export default {
         }
       });
     },
+    dateFormat(date) {
+      return moment(date).format("YYYY-MM-DD");
+    },
+    goItem(id) {
+      let routeData = this.$router.resolve({
+        name: "mdView",
+        params: {
+          id: id,
+        },
+        query: {
+          searchKey: this.searchKey,
+        },
+      });
+      window.open(routeData.href, "_blank");
+    },
+    loadAmendment() {
+      this.$axios
+        .post("/article/getArticleAmendmentInfo", {
+          page: this.amendment.page,
+          pageSize: this.amendment.pageSize,
+        })
+        .then((res) => {
+          if (res.code == "200") {
+            this.amendment.amendment = res.data;
+            if (res.data.list.length > 0) {
+              this.amendment.page += this.amendment.page;
+            }
+            this.amendmentLoad = true;
+          }
+        });
+    },
     loadAuthorzationData() {
       this.$axios.post("/user/getAuthorization", {}).then((res) => {
         if (res.code == "200") {
@@ -650,37 +963,36 @@ export default {
 
 <style scoped>
 .aCollapse {
-	width: 100%;
-	height: 100%;
+  width: 100%;
+  height: 100%;
 
-	background-color: white;
+  background-color: white;
 }
 
 .aCollapse #ac {
-	padding: 8px 14px;
+  padding: 8px 14px;
 }
 
 .t1 {
-	padding: 8px 0;
-	min-width: 100px;
+  padding: 8px 0;
+  min-width: 100px;
 
-	text-align: right;
+  text-align: right;
 }
 
 .errorMessage {
-	border: solid 1px red;
-	border-radius: 4px;
+  border: solid 1px red;
+  border-radius: 4px;
 }
 
 .add {
-	float: right;
+  float: right;
 
-	margin-right: 22px;
-	padding: 8px 0;
+  margin-right: 22px;
+  padding: 8px 0;
 }
 
 .isClick {
-	cursor: pointer;
+  cursor: pointer;
 }
-
 </style>
