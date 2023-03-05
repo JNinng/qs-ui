@@ -87,7 +87,10 @@ const routes = [
 				path: "/id/:id",
 				name: "mdView",
 				component: MDView,
-				props: true,
+				props: (route) => ({
+					id: route.params.id,
+					searchKey: route.query.searchKey,
+				}),
 			},
 		],
 	},

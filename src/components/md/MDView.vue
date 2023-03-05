@@ -6,6 +6,14 @@
           <h1>{{ article.title }}</h1>
         </div>
         <MdViewer class="show" :content="article.content"></MdViewer>
+        <div class="likeArticle" v-if="likeLoad">
+          <div class="likeHeader">你可能感兴趣</div>
+          <div v-for="(item, index) in likeArticle" :key="index">
+            <div class="likeTitle" @click="goArticleItem(item.id)">
+              {{ item.title }}
+            </div>
+          </div>
+        </div>
         <comment-view
           class="articleComment"
           :articleId="id"
@@ -134,7 +142,16 @@ export default {
     CommentView,
   },
 
-  props: ["id"],
+  props: {
+    id: {
+      type: String,
+      default: "null",
+    },
+    searchKey: {
+      type: String,
+      default: "null",
+    },
+  },
 
   data() {
     return {
@@ -146,6 +163,8 @@ export default {
       isVisible: true,
       info: {},
       infoLoad: false,
+      likeArticle: [],
+      likeLoad: false,
     };
   },
 
@@ -175,6 +194,7 @@ export default {
       .catch((err) => {
         console.log("test get err" + JSON.stringify(err));
       });
+    this.loadLikeArticle();
   },
 
   mounted() {
@@ -237,6 +257,18 @@ export default {
           });
       }
     },
+    goArticleItem(id) {
+      let routeData = this.$router.resolve({
+        name: "mdView",
+        params: {
+          id: id,
+        },
+        query: {
+          searchKey: this.searchKey,
+        },
+      });
+      window.open(routeData.href, "_blank");
+    },
     goItem(id) {
       let routeData = this.$router.resolve({
         name: "user",
@@ -263,6 +295,23 @@ export default {
             this.$axios.serverAddress + "/file/image/" + res.data.headPortrait;
           this.infoLoad = true;
         });
+    },
+    loadLikeArticle() {
+      if (this.searchKey != "null") {
+        this.$axios
+          .post("/es/index/getLikeArticle", {
+            key: this.searchKey,
+            articleId: this.id,
+            page: 1,
+            pageSize: 4,
+          })
+          .then((res) => {
+            if (res.code == "200") {
+              this.likeArticle = res.data;
+              this.likeLoad = true;
+            }
+          });
+      }
     },
     setTime() {
       this.clearTimeSet = setInterval(() => {
@@ -363,146 +412,164 @@ export default {
 
 <style scoped>
 .mdRoot {
-	margin: 0;
-	padding: 0;
-	width: 100%;
+  margin: 0;
+  padding: 0;
+  width: 100%;
 }
 
 .articleTitle {
-	margin-bottom: 12px;
-	border-bottom: solid 4px rgba(0, 0, 0, .273);
-	padding: 20px 20px 10px 40px;
+  margin-bottom: 12px;
+  border-bottom: solid 4px rgba(0, 0, 0, 0.273);
+  padding: 20px 20px 10px 40px;
 }
 
 .mdContent {
-	display: flex;
+  display: flex;
 
-	padding: 10px 1% 20px 1%;
-	width: 94%;
+  padding: 10px 1% 20px 1%;
+  width: 94%;
 
-/* background-color: black; */
+  /* background-color: black; */
 
-	transform: translate3d(2.08%, 0, 0);
+  transform: translate3d(2.08%, 0, 0);
 }
 
 .mdLeft {
-	-webkit-border-radius: 0 20px 0 0;
-	   -moz-border-radius: 0 20px 0 0;
-	        border-radius: 0 20px 0 0;
-	width: calc(100% - 260px);
-	min-width: 640px;
+  -webkit-border-radius: 0 20px 0 0;
+  -moz-border-radius: 0 20px 0 0;
+  border-radius: 0 20px 0 0;
+  width: calc(100% - 260px);
+  min-width: 640px;
 
-	/* background-color: white; */
+  /* background-color: white; */
+}
+
+.likeArticle {
+  margin-top: 2px;
+  background-color: white;
+  padding: 10px 10px 16px 10px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 14px 28px, rgba(0, 0, 0, 0.22) 0 10px 10px;
+}
+
+.likeHeader {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.likeTitle {
+  padding: 2px 0;
+  margin: 4px 0;
+  border-bottom: solid 1px rgba(145, 145, 145, 0.219);
+  cursor: pointer;
 }
 
 .mdRight {
-	display: block;
+  display: block;
 
-	margin-left: 12px;
-	width: 260px;
+  margin-left: 12px;
+  width: 260px;
 }
 
 .rightContent {
-	position:         sticky;
-	position: -webkit-sticky;
+  position: sticky;
+  position: -webkit-sticky;
 
-	transition: all .4s;
+  transition: all 0.4s;
 }
 
 .mdRight .infoContent {
-	margin-top: 16px;
-	padding-bottom: 12px;
+  margin-top: 16px;
+  padding-bottom: 12px;
 
-	background-color: white;
+  background-color: white;
 
-	box-shadow: rgba(0, 0, 0, .25) 0 14px 28px, rgba(0, 0, 0, .22) 0 10px 10px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 14px 28px, rgba(0, 0, 0, 0.22) 0 10px 10px;
 }
 
 .noVisible {
-	top: 84px;
+  top: 84px;
 }
 
 .visible {
-	top: 20px;
+  top: 20px;
 }
 
 .info .tag {
-	margin: 10px 8px 0 8px;
+  margin: 10px 8px 0 8px;
 
-	font-size: 14px;
+  font-size: 14px;
 }
 
 .info >>> img {
-	margin: -14px 0 0 0;
-	border-radius: 50%;
-	width: 66px;
-	height: 66px;
+  margin: -14px 0 0 0;
+  border-radius: 50%;
+  width: 66px;
+  height: 66px;
 
-	box-shadow: rgba(0, 0, 0, .8) 0 0 2px 4px,
-	rgba(255, 255, 255, .8) 0 0 1px 6px;
+  box-shadow: rgba(0, 0, 0, 0.8) 0 0 2px 4px,
+    rgba(255, 255, 255, 0.8) 0 0 1px 6px;
 
-	transform: translate3d(146%, 0, 0);
+  transform: translate3d(146%, 0, 0);
 }
 
 .infoHeader {
-	/* display: flex; */
-	margin-bottom: 4px;
+  /* display: flex; */
+  margin-bottom: 4px;
 }
 
 .infoHeader img {
-	/* float: left; */
+  /* float: left; */
 }
 
 .infoHeader div {
-	overflow: hidden;
+  overflow: hidden;
 
-	margin: 6px 2px 0 8px;
-	height: 60px;
+  margin: 6px 2px 0 8px;
+  height: 60px;
 
-	font-size: 20px;
-	white-space: prare-wp;
+  font-size: 20px;
+  white-space: prare-wp;
 
-/* text-overflow: ellipsis; */
-	word-wrap: break-word;
+  /* text-overflow: ellipsis; */
+  word-wrap: break-word;
 }
 
 .operation {
-	margin: 24px 0 0 0;
+  margin: 24px 0 0 0;
 }
 
 .operation >>> td {
-	width: 40px;
+  width: 40px;
 }
 
 #divider {
-	margin: 6px 0;
-	width: 100%;
+  margin: 6px 0;
+  width: 100%;
 }
 
 #aDivider {
-	margin: 6px 0 20px 0;
+  margin: 6px 0 20px 0;
 }
 
 .show {
-	padding: 20px 0 10px 0;
+  padding: 20px 0 10px 0;
 
-	box-shadow: rgba(0, 0, 0, .25) 0 14px 28px, rgba(0, 0, 0, .22) 0 10px 10px;
-	/* background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 14px 28px, rgba(0, 0, 0, 0.22) 0 10px 10px;
+  /* background-color: white;
 
 	box-shadow: 0 0 5.7px rgba(0, 0, 0, -.273), 0 0 5.1px rgba(0, 0, 0, .056),
 	0 0 6px rgba(0, 0, 0, 1); */
 }
 
 .articleComment {
-	padding: 10px 10px;
+  padding: 10px 10px;
 
-	background-color: white;
+  background-color: white;
 
-	box-shadow: rgba(0, 0, 0, .25) 0 14px 28px, rgba(0, 0, 0, .22) 0 10px 10px;
+  box-shadow: rgba(0, 0, 0, 0.25) 0 14px 28px, rgba(0, 0, 0, 0.22) 0 10px 10px;
 }
 
 .isClick {
-	cursor: pointer;
+  cursor: pointer;
 }
-
 </style>
