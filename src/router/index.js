@@ -15,13 +15,22 @@ import SystemManagement from "@/components/admin/item/SystemManagement";
 import CommentManagement from "@/components/admin/item/CommentManagement";
 import UserPage from "@/components/user/UserPage";
 import Search from "@/components/search/Search";
+import Explore from "@/components/explore/Explore";
 
 const routes = [
 	{ path: "/", name: "home", component: Home },
 	{ path: "/timeline", name: "timeline", component: Timeline },
-	{ path: "/tag", name: "tag", component: Tag },
+	{
+		path: "/tag",
+		name: "tag",
+		component: Tag,
+		props: (route) => ({
+			tagName: route.query.tagName,
+		}),
+	},
 	{ path: "/about", name: "about", component: About },
 	{ path: "/editor", name: "editor", component: MdEditor },
+	{ path: "/explore", name: "explore", component: Explore },
 	{
 		path: "/search",
 		name: "search",

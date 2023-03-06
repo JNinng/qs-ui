@@ -1,6 +1,6 @@
 <template>
   <div class="tagListCardRoot">
-    <div class="tagName">{{ data.name }}</div>
+    <div class="tagName" @click="goTag">{{ data.name }}</div>
     <div class="tagList">
       <div
         class="item"
@@ -81,6 +81,14 @@ export default {
           console.log("test post err:" + err);
         });
     },
+    goTag() {
+      this.$router.push({
+        name: "tag",
+        query: {
+          tagName: this.tagName,
+        },
+      });
+    },
     goItem(id) {
       // let routeData =
       this.$router.push({
@@ -97,57 +105,57 @@ export default {
 
 <style scoped>
 .tagListCardRoot {
-	/* padding: 8px 6px; */
-	min-width: 300px;
+  /* padding: 8px 6px; */
+  min-width: 300px;
 }
 
 .tagName {
-	overflow: hidden;
+  overflow: hidden;
 
-	padding-bottom: 1px;
+  padding-bottom: 1px;
 
-	font-size: 20px;
-	font-weight: bold;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+  font-size: 20px;
+  font-weight: bold;
+  white-space: nowrap;
+  cursor: pointer;
+  text-overflow: ellipsis;
 }
 
 .tagList .item {
-	display: flex;
+  display: flex;
 
-	border-bottom: solid .6px rgba(102, 102, 102, .0686);
-	padding-top: 8px;
+  border-bottom: solid 0.6px rgba(102, 102, 102, 0.0686);
+  padding-top: 8px;
 
-	font-size: 14px;
+  font-size: 14px;
 
-	color: #666;
+  color: #666;
 
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .tagList .item:hover {
-	background-color: rgba(219, 219, 219, .314);
+  background-color: rgba(219, 219, 219, 0.314);
 }
 
 .tagList .itemTitle {
-	display: -webkit-box;
-	float: left;
-	overflow: hidden;
+  display: -webkit-box;
+  float: left;
+  overflow: hidden;
 
-	-webkit-box-orient: vertical;
+  -webkit-box-orient: vertical;
 
-	min-width: 120px;
+  min-width: 120px;
 
-	white-space: normal;
-	word-break: break-word;
+  white-space: normal;
+  word-break: break-word;
 
-	-webkit-line-clamp: 1;
+  -webkit-line-clamp: 1;
 }
 
 .tagList .date {
-	float: right;
+  float: right;
 
-	min-width: 120px;
+  min-width: 120px;
 }
-
 </style>
