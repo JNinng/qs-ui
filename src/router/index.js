@@ -16,6 +16,7 @@ import CommentManagement from "@/components/admin/item/CommentManagement";
 import UserPage from "@/components/user/UserPage";
 import Search from "@/components/search/Search";
 import Explore from "@/components/explore/Explore";
+import Top from "@/components/top/Top";
 
 const routes = [
 	{ path: "/", name: "home", component: Home },
@@ -31,6 +32,7 @@ const routes = [
 	{ path: "/about", name: "about", component: About },
 	{ path: "/editor", name: "editor", component: MdEditor },
 	{ path: "/explore", name: "explore", component: Explore },
+	{ path: "/top", name: "top", component: Top },
 	{
 		path: "/search",
 		name: "search",
