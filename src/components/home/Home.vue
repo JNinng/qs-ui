@@ -159,11 +159,16 @@ export default {
       // window.open(routeData.href, "_blank");
     },
     loadHot() {
-      this.$axios.post("/article/hot", {}).then((res) => {
-        if ((res.code = "200" && res.data.list.length > 0)) {
-          this.hotData = res.data.list;
-        }
-      });
+      this.$axios
+        .post("/article/hot", {
+          mode: 0,
+          top: 10,
+        })
+        .then((res) => {
+          if ((res.code = "200" && res.data.list.length > 0)) {
+            this.hotData = res.data.list;
+          }
+        });
     },
   },
 
@@ -187,110 +192,109 @@ export default {
 
 <style scoped>
 .homeRoot {
-	display: flex;
+  display: flex;
 }
 
 .homeContent {
-	display: flex;
+  display: flex;
 
-	padding: 20px 2%;
-	width: 100%;
-	min-width: 980px;
+  padding: 20px 2%;
+  width: 100%;
+  min-width: 980px;
 
-	justify-content: center;
+  justify-content: center;
 
-/* align-items: center; */
-	/* background-color: ivory; */
-	flex-wrap: wrap;
+  /* align-items: center; */
+  /* background-color: ivory; */
+  flex-wrap: wrap;
 }
 
 #mdView {
-	overflow: hidden;
+  overflow: hidden;
 
-	height: 78%;
+  height: 78%;
 
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .homeTop {
-	float: left;
-	overflow: hidden;
+  float: left;
+  overflow: hidden;
 
-	margin-bottom: 12px;
+  margin-bottom: 12px;
 
-/* padding: 8px 6px; */
-	width: calc(60% + 300px + 1% + 12px);
-	height: 280px;
+  /* padding: 8px 6px; */
+  width: calc(60% + 300px + 1% + 12px);
+  height: 280px;
 
-	background-color: white;
+  background-color: white;
 
-	box-shadow: rgba(9, 30, 66, .25) 0 1px 1px, rgba(9, 30, 66, .13) 0 0 1px 1px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0 1px 1px, rgba(9, 30, 66, 0.13) 0 0 1px 1px;
 }
 
 .itemTitle {
-	overflow: hidden;
+  overflow: hidden;
 
-	border-bottom: solid 1px rgba(119, 119, 119, .314);
-	padding-bottom: 1px;
+  border-bottom: solid 1px rgba(119, 119, 119, 0.314);
+  padding-bottom: 1px;
 
-	font-size: 20px;
-	font-weight: bold;
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .hotItem {
-	overflow: hidden;
+  overflow: hidden;
 
-	height: 28px;
+  height: 28px;
 
-	line-height: 28px;
-	white-space: nowrap;
-	text-overflow: ellipsis;
+  line-height: 28px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 
-	cursor: pointer;
+  cursor: pointer;
 }
 
 .hotItem:hover {
-	background-color: rgba(219, 219, 219, .314);
+  background-color: rgba(219, 219, 219, 0.314);
 }
 
 .topTitle {
-	margin: 6px 20px;
+  margin: 6px 20px;
 }
 
 .homeLeft {
-	float: left;
+  float: left;
 
-	padding: 8px 6px;
-	width: 60%;
-	min-width: 296px;
+  padding: 8px 6px;
+  width: 60%;
+  min-width: 296px;
 
-	background-color: white;
+  background-color: white;
 
-	box-shadow: rgba(9, 30, 66, .25) 0 1px 1px, rgba(9, 30, 66, .13) 0 0 1px 1px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0 1px 1px, rgba(9, 30, 66, 0.13) 0 0 1px 1px;
 }
 
 .homeRight {
-	margin-left: 1%;
-	width: 300px;
+  margin-left: 1%;
+  width: 300px;
 }
 
 #divider {
-	margin: 6px 0;
+  margin: 6px 0;
 }
 
 .rightCard {
-	margin-bottom: 8px;
-	padding: 8px 6px;
+  margin-bottom: 8px;
+  padding: 8px 6px;
 
-/* height: 200px; */
+  /* height: 200px; */
 
-	background-color: white;
+  background-color: white;
 
-	box-shadow: rgba(9, 30, 66, .25) 0 1px 1px, rgba(9, 30, 66, .13) 0 0 1px 1px;
+  box-shadow: rgba(9, 30, 66, 0.25) 0 1px 1px, rgba(9, 30, 66, 0.13) 0 0 1px 1px;
 }
 
 .el-carousel__item {
-	background-color: #d3dce6;
+  background-color: #d3dce6;
 }
-
 </style>
