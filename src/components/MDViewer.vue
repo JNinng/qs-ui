@@ -67,22 +67,27 @@ export default {
 </script>
 
 <style scoped>
+.viewerRoot {
+	background-color: white;
+}
+
 .card {
-  overflow: hidden;
+	overflow: hidden;
 
-  margin: 0 20px 20px 20px;
-  padding: 20px 20px 20px 20px;
+	margin: 0 20px 20px 20px;
 
-  height: 100%;
+/* padding: 20px 20px 20px 20px; */
+	height: 100%;
 
-  background-color: white;
+	background-color: white;
 }
 
 .x1 {
-  height: 120px;
+	height: 120px;
 }
 
 .x2 {
-  height: 280px;
+	height: 280px;
 }
+
 </style>

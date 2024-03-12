@@ -12,7 +12,7 @@
         <div class="info">
           <img
             style="border-radius: 50%"
-            class="avatar"
+            class="avatar isClick"
             :src="
               this.$axios.serverAddress +
               '/file/image/' +
@@ -20,9 +20,12 @@
             "
             width="36"
             height="36"
+            @click="goItem(item.comment.userId)"
           />
           <div class="right">
-            <div class="name">{{ item.comment.name }}</div>
+            <div class="name isClick" @click="goItem(item.comment.userId)">
+              {{ item.comment.name }}
+            </div>
             <div class="date">
               {{ getTime(item.comment.updateTime) }} {{ item.comment.ip }}
             </div>
@@ -112,6 +115,15 @@ export default {
     this.loadComments();
   },
   methods: {
+    goItem(id) {
+      let routeData = this.$router.resolve({
+        name: "user",
+        params: {
+          id: id,
+        },
+      });
+      window.open(routeData.href, "_blank");
+    },
     setShow(id) {
       this.showItemId = id;
     },
@@ -138,95 +150,123 @@ export default {
 
 <style  scoped>
 .commentHeader {
-  font-size: 20px;
-  font-weight: bold;
-  /* color: rgb(104, 104, 104); */
-  padding-bottom: 10px;
+	/* color: rgb(104, 104, 104); */
+	padding-bottom: 10px;
+
+	font-size: 20px;
+	font-weight: bold;
 }
 
 .commentViewRoot {
-  margin-top: 24px;
-  padding-top: 10px;
-  border-top: 1px solid #dcdfe6;
+	margin-top: 24px;
+	border-top: 1px solid #dcdfe6;
+	padding-top: 10px;
 }
 
 .container .comment {
-  display: flex;
-  flex-direction: column;
-  padding: 10px;
-  border-bottom: 1px solid #dcdfe6;
+	display: flex;
+
+	border-bottom: 1px solid #dcdfe6;
+	padding: 10px;
+
+	flex-direction: column;
 }
 
 .container .comment .info {
-  display: flex;
-  align-items: center;
+	display: flex;
+
+	align-items: center;
 }
 
 .container .comment .info .right {
-  display: flex;
-  flex-direction: column;
-  margin-left: 10px;
+	display: flex;
+
+	margin-left: 10px;
+
+	flex-direction: column;
 }
 
 .container .comment .info .right .date {
-  font-size: 12px;
-  color: #909399;
+	font-size: 12px;
+
+	color: #909399;
 }
 
 .container .comment .commentContentView {
-  font-size: 16px;
-  color: #303133;
-  line-height: 20px;
-  padding: 10px 0;
+	padding: 10px 0;
+
+	font-size: 16px;
+	line-height: 20px;
+
+	color: #303133;
 }
 
 .container .comment .control {
-  display: flex;
-  align-items: center;
-  font-size: 14px;
-  color: #909399;
+	display: flex;
+
+	font-size: 14px;
+
+	color: #909399;
+
+	align-items: center;
 }
 
 .container .comment .reply {
-  margin: 10px 0;
-  border-left: 2px solid #dcdfe6;
+	margin: 10px 0;
+	border-left: 2px solid #dcdfe6;
 }
 
 .container .comment .reply .item {
-  margin: 0 20px;
-  padding: 10px 0;
-  border-bottom: 1px dashed #dcdfe6;
+	margin: 0 20px;
+	border-bottom: 1px dashed #dcdfe6;
+	padding: 10px 0;
 }
 
 .container .comment .reply .item .reply-content {
-  display: block;
-  align-items: center;
-  font-size: 14px;
-  color: #303133;
+	display: block;
+
+	font-size: 14px;
+
+	color: #303133;
+
+	align-items: center;
 }
 
 .container .comment .reply .item .reply-content .from-name {
-  margin: 0 0 2px 0;
+	margin: 0 0 2px 0;
 }
 
 .container .comment .reply .item .reply-content .to-name {
-  color: #409eff;
-  margin-left: 5px;
-  margin-right: 5px;
+	margin-right: 5px;
+	margin-left: 5px;
+
+	color: #409eff;
 }
 
 .container .comment .reply .item .reply-bottom {
-  display: flex;
-  align-items: center;
-  margin-top: 6px;
-  font-size: 12px;
-  color: #909399;
+	display: flex;
+
+	margin-top: 6px;
+
+	font-size: 12px;
+
+	color: #909399;
+
+	align-items: center;
 }
 
 .container .comment .reply .item .reply-bottom .reply-text {
-  display: flex;
-  align-items: center;
-  margin-left: 10px;
-  cursor: pointer;
+	display: flex;
+
+	margin-left: 10px;
+
+	cursor: pointer;
+
+	align-items: center;
 }
+
+.isClick {
+	cursor: pointer;
+}
+
 </style>

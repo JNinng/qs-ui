@@ -1,23 +1,25 @@
 <template>
-  <div class="root">
-    <div class="content">
-      <div class="commentBlock">
+  <div class="commentBlockRoot">
+    <div class="commentContent">
+      <div>
         <div class="commentHeader">
-          <div class="commentHeaderItem">
-            <el-input
-              class="input"
-              v-model="this.$store.state.nickname"
-              placeholder="昵称"
-              clearable
-            ></el-input>
-          </div>
-          <div class="commentHeaderItem">
-            <el-input
-              class="input"
-              v-model="this.$store.state.email"
-              placeholder="邮箱"
-              clearable
-            ></el-input>
+          <div v-if="this.$store.state.config.noLogin">
+            <div class="commentHeaderItem">
+              <el-input
+                class="input"
+                v-model="this.$store.state.config.info.nickname"
+                placeholder="昵称"
+                clearable
+              ></el-input>
+            </div>
+            <div class="commentHeaderItem">
+              <el-input
+                class="input"
+                v-model="this.$store.state.config.info.email"
+                placeholder="邮箱"
+                clearable
+              ></el-input>
+            </div>
           </div>
         </div>
         <div style="clear: both"></div>
@@ -81,8 +83,8 @@ export default {
       if (this.commentContent.length > 0) {
         this.$axios
           .post("/comment/comment", {
-            name: this.$store.state.nickname,
-            email: this.$store.state.email,
+            name: this.$store.state.config.info.nickname,
+            email: this.$store.state.config.info.email,
             content: this.commentContent,
             parentId: this.commentId,
             articleId: this.articleId,
@@ -101,43 +103,46 @@ export default {
 </script>
 
 <style scoped>
-.root {
-  display: flex;
+.commentBlockRoot {
+	display: flex;
 
-  position: relative;
+	position: relative;
 
-  min-height: 32px;
+	min-height: 32px;
+
+	background-color: white;
 }
 
-.content {
-  width: 100%;
+.commentContent {
+	width: 100%;
 }
 
 .commentHeader {
-  display: flex;
+	display: flex;
 
-  padding: 0 10px 0 10px;
+	padding: 0 10px 0 10px;
 }
 
 .commentHeaderItem {
-  float: left;
+	float: left;
 
-  margin: 4px 10px 0 10px;
+	margin: 4px 10px 0 10px;
 
-  flex: 1;
+	flex: 1;
 }
 
 @media only screen and (max-width: 767px) {
-  .commentHeader {
-    display: block;
-  }
+	.commentHeader {
+		display: block;
+	}
 }
 
 .input {
-  height: 32px;
+	height: 32px;
 }
 
 .comment {
-  margin: 4px 20px 0 20px;
+	margin: 4px 20px 0 20px;
 }
+
 </style>

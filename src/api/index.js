@@ -1,8 +1,9 @@
 import axios from "axios";
 import qs from "qs";
 
-axios.defaults.baseURL = "/api";
-const serverAddress = "http://192.168.0.105:8300";
+// axios.defaults.baseURL = "/api";
+const serverAddress = "http://192.168.0.105:8401";
+axios.defaults.baseURL = serverAddress + "/";
 
 export default {
 	serverAddress,
@@ -26,7 +27,7 @@ export default {
 			axios({
 				method: "post",
 				url,
-				header: header,
+				headers: header,
 				data: qs.stringify(data),
 			})
 				.then((res) => {
@@ -64,13 +65,14 @@ export default {
 		await axios({
 			method: "post",
 			url: "/file/upload",
-			header: header,
+			headers: header,
 			data: data,
 		})
 			.then((res) => {
 				result = res.data.data;
 				for (let i = 0; i < result.length; i++) {
 					result[i].url = that.serverAddress + result[i].url;
+					result[i].title = "";
 				}
 			})
 			.catch((err) => {
@@ -94,7 +96,7 @@ export default {
 			axios({
 				method: "get",
 				url,
-				header: header,
+				headers: header,
 				params: data,
 			})
 				.then((res) => {

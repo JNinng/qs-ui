@@ -86,16 +86,21 @@ export default {
 
 <style scoped>
 .sidebar-container {
-  transition: width 0.4s;
-  width: 20%;
-  background-color: #444;
-  height: 100%;
-  position: fixed;
-  z-index: 1001;
-  overflow: hidden;
+	overflow: hidden;
+
+	position: fixed;
+	z-index: 1001;
+
+	width: 20%;
+	height: 100%;
+
+	background-color: #444;
+
+	transition: width .4s;
 }
 
 .scrollbar-wrapper {
-  overflow-x: hidden;
+	overflow-x: hidden;
 }
+
 </style>

@@ -5,13 +5,14 @@
       mode="horizontal"
       :ellipsis="false"
       @select="handleSelect"
+      v-if="menuShow"
     >
       <el-menu-item index="0"
         ><span class="sidebar-switch" @click="open = !open">
           <span v-if="this.$store.state.config.login">
             <el-tooltip content="退出连接" placement="bottom">
               <el-icon :size="25" style="height: 50px; width: 50px"
-                ><User
+                ><img class="loginImg" :src="info.headPortrait"
               /></el-icon>
             </el-tooltip>
           </span>
@@ -23,7 +24,12 @@
             </el-tooltip>
           </span> </span
       ></el-menu-item>
-      <el-menu-item index="1">CheckLogin</el-menu-item>
+      <el-menu-item index="1">{{ info.name }}</el-menu-item>
+      <el-menu-item index="2">
+        <el-button>
+          <el-icon><HomeFilled /></el-icon>
+        </el-button>
+      </el-menu-item>
     </el-menu>
   </div>
 </template>
@@ -39,7 +45,15 @@ export default {
   props: [],
 
   data() {
-    return {};
+    return {
+      info: {},
+      menuShow: false,
+    };
+  },
+
+  beforeMount() {
+    this.getHeadPortrait();
+    this.checkLogin();
   },
 
   mounted() {},
@@ -48,7 +62,11 @@ export default {
 
   created() {},
 
-  watch: {},
+  watch: {
+    "$store.state.config.login"(newValue, oldValue) {
+      this.getHeadPortrait();
+    },
+  },
 
   methods: {
     handleSelect: function (index) {
@@ -57,50 +75,63 @@ export default {
         case "0":
           if (this.$store.state.config.login) {
             this.$axios.get("/user/logout", {}).then((res) => {
-              console.log("test 1 res:" + res);
+              localStorage.removeItem("id");
+              localStorage.removeItem("token");
+              localStorage.removeItem("tokenValue");
               this.$store.state.config.login = false;
               this.$store.state.config.noLogin = true;
             });
           } else {
-            // this.$axios
-            //   .post("/user/login", {
-            //     name: "restfulToolkitX",
-            //     password: "restfulToolkitX",
-            //   })
-            //   .then((res) => {
-            //     const token = res.data.token;
-            //     const id = res.data.id;
-            //     console.log("test 1 login:" + res);
-            //     localStorage.setItem("token", "token");
-            //     localStorage.setItem("tokenValue", token);
-            //     localStorage.setItem("id", res.data.id);
-            //     this.$store.state.config.id = id;
-            //     this.$store.state.config.token = token;
-            //     this.$store.state.config.login = true;
-            //     this.$store.state.config.noLogin = false;
-            //   });
+            this.$store.state.config.toLogin = true;
           }
           break;
         case "1":
           console.log("test 2");
-          this.$axios
-            .get("/user/checkLogin", {
-              id: localStorage.getItem("id"),
-            })
-            .then((res) => {
-              if ((res.code = "200")) {
-                this.$notify({
-                  message: res.data,
-                  duration: 800,
-                });
-              }
-            });
+          this.checkLogin();
+          break;
+        case "2":
+          this.$router.replace("/");
           break;
       }
+    },
+    getHeadPortrait() {
+      var id = localStorage.getItem("id");
+      if (id) {
+        this.$axios.post("/user/info", { id: id }).then((res) => {
+          this.info = res.data;
+          this.info.headPortrait =
+            this.$axios.serverAddress + "/file/image/" + res.data.headPortrait;
+        });
+      }
+    },
+    checkLogin() {
+      this.$axios
+        .get("/user/checkLogin", {
+          id: localStorage.getItem("id"),
+        })
+        .then((res) => {
+          if ((res.code = "200")) {
+            this.menuShow = true;
+            this.$notify({
+              message: res.data,
+              duration: 800,
+            });
+          }
+        });
     },
   },
 };
 </script>
 
 <style scoped>
+.loginImg {
+	overflow: hidden;
+
+	border-radius: 50%;
+	width: 40px;
+	height: 40px;
+
+	cursor: pointer;
+}
+
 </style>

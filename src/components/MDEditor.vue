@@ -238,8 +238,9 @@ export default {
 }
 
 .operate {
+  float: right;
+
   margin-top: 6px;
   margin-bottom: 2px;
-  float: right;
 }
 </style>

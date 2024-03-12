@@ -20,15 +20,15 @@ module.exports = {
 		port: 8888,
 		host: "192.168.0.105",
 		open: "http://192.168.0.105:8888",
-		proxy: {
-			"/api": {
-				target: "http://localhost:8300/",
-				changeOrigin: true,
-				pathRewrite: {
-					"^/api": "",
-				},
-			},
-		},
+		// proxy: {
+		// 	"/api": {
+		// 		target: "http://192.168.0.105:8401/",
+		// 		changeOrigin: true,
+		// 		pathRewrite: {
+		// 			"^/api": "",
+		// 		},
+		// 	},
+		// },
 	},
 	mode: "development", // 开发模式
 	entry: "./src/main.js", // 入口文件
